@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Trung Tâm Sửa Chữa iPhone Uy Tín Lấy Ngay - Anh Táo Mobile</title>
+    <meta name="description" content="Dịch vụ sửa chữa iPhone, ép kính, thay pin dung lượng cao, thay màn hình zin hãng lấy ngay tại Cầu Giấy Hà Nội. Đội ngũ kĩ thuật viên chuyên nghiệp bảo hành dài hạn.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <span>Anh Táo</span> Mobile
+            </a>
+            
+            <nav id="navbar-menu">
+                <a href="index.html" class="nav-link" id="nav-home">Trang chủ</a>
+                <a href="iphone-detail.html" class="nav-link" id="nav-iphone">iPhone</a>
+                <a href="iphone-cu.html" class="nav-link" id="nav-iphone-cu">iPhone Cũ</a>
+                <a href="sua-chua.html" class="nav-link active" id="nav-repair">Sửa Chữa</a>
+                <a href="tin-tuc.html" class="nav-link" id="nav-news">Tin Tức Công Nghệ</a>
+            </nav>
+            
+            <div class="header-actions">
+                <div class="cart-icon" id="cart-indicator-btn" onclick="showToast('🛠️ Dịch vụ sửa chữa', 'Chọn mẫu máy bên dưới để nhận ước tính bảng giá trực quan nhé.', 'info')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main style="padding-top: calc(var(--header-height) + 40px); padding-bottom: 80px;">
+        <div class="container">
+            
+            <div class="section-header">
+                <span class="section-subtitle" style="color:var(--accent-blue)">Sửa iPhone Lấy Ngay - Linh Kiện Chính Hãng</span>
+                <h1 class="section-title">Trung Tâm Bảo Hành & Sửa Chữa Anh Táo</h1>
+                <p class="section-desc">Khắc phục triệt để các lỗi phần cứng iPhone nhanh chóng, minh bạch. Khách hàng xem trực tiếp kĩ thuật viên thao tác, lấy ngay sau 30 phút.</p>
+            </div>
+
+            <!-- Main interactive grid -->
+            <div class="form-grid" style="gap: 50px;">
+                
+                <!-- Left Column: Estimator -->
+                <div class="repair-estimator">
+                    <div style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 28px; padding: 40px;">
+                        <h3 style="font-size: 1.3rem; font-weight:800; margin-bottom: 24px; display:flex; align-items:center; gap:8px;">
+                            <span>🛠️</span> Công cụ ước tính chi phí sửa chữa
+                        </h3>
+                        
+                        <div class="form-group">
+                            <label for="repair-phone-model">1. Chọn dòng máy iPhone của bạn</label>
+                            <select id="repair-phone-model" class="form-control" onchange="calculateRepairCost()">
+                                <option value="ip15pm">iPhone 15 Pro Max</option>
+                                <option value="ip14pm" selected>iPhone 14 Pro Max</option>
+                                <option value="ip13p">iPhone 13 Pro</option>
+                                <option value="ip12pm">iPhone 12 Pro Max</option>
+                                <option value="ip11pm">iPhone 11 Pro Max</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="repair-service-type">2. Chọn dịch vụ sửa chữa</label>
+                            <select id="repair-service-type" class="form-control" onchange="calculateRepairCost()">
+                                <option value="battery">Thay Pin Dung Lượng Cao Pisen</option>
+                                <option value="screen">Thay Màn Hình Zin Cảm Ứng VNA</option>
+                                <option value="glass">Ép Kính Mặt Trước Cường Lực</option>
+                                <option value="faceid">Sửa Lỗi Mất Face ID / Camera Trước</option>
+                            </select>
+                        </div>
+
+                        <!-- Results Block -->
+                        <div id="repair-result-panel" style="margin-top: 30px;">
+                            <!-- Injected dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Features and benefits & Booking Form -->
+                <div class="repair-booking">
+                    <div class="premium-card-form" style="margin-bottom: 30px;">
+                        <h3 style="font-size: 1.25rem; font-weight:800; margin-bottom: 16px;">Đặt lịch hẹn sửa chữa trực tuyến</h3>
+                        <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom: 20px;">Đặt lịch trước để được giảm ngay 10% chi phí sửa chữa và không phải xếp hàng chờ đợi.</p>
+                        
+                        <form id="repair-booking-form" onsubmit="handleRepairSubmit(event)">
+                            <div class="form-group">
+                                <label for="rep-name">Tên khách hàng *</label>
+                                <input type="text" id="rep-name" class="form-control" placeholder="Nguyễn Văn A" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="rep-phone">Số điện thoại di động *</label>
+                                <input type="tel" id="rep-phone" class="form-control" placeholder="0987654321" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="rep-time">Thời gian hẹn mang máy qua cửa hàng</label>
+                                <input type="datetime-local" id="rep-time" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary form-submit-btn" style="width: 100%;">Xác Nhận Đặt Lịch Hẹn</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo" style="font-size: 1.6rem">
+                        <span>Anh Táo</span> Mobile
+                    </a>
+                    <p>Chuỗi hệ thống kiểm định điện thoại qua sử dụng số 1 Việt Nam. Đem những chiếc Flagship Like new tiệm cận sự hoàn hảo nhất đến tay khách hàng.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Sản phẩm chủ lực</h4>
+                    <ul class="footer-links">
+                        <li><a href="iphone-cu.html">iPhone cũ likenew</a></li>
+                        <li><a href="iphone-detail.html">iPhone 15 Pro Max mới</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Dịch vụ AnhTáoCare</h4>
+                    <ul class="footer-links">
+                        <li><a href="sua-chua.html">Dịch vụ sửa chữa điện thoại</a></li>
+                        <li><a href="index.html#trust-policies">Chính sách bảo hành</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Thông tin liên hệ</h4>
+                    <div class="footer-contact-item">
+                        <span>📍</span>
+                        <p>123 Đường Cầu Giấy, Phường Quan Hoa, Quận Cầu Giấy, Hà Nội</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-copy">
+                    &copy; 2026 Anh Táo Mobile Corporation. Bảo lưu mọi quyền.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast ALERT Portal -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/backend.js"></script>
+    <script>
+        // Repair cost matrix
+        const REPAIR_PRICES = {
+            ip15pm: {
+                battery: { price: 1490000, time: '35 phút', warranty: '12 tháng' },
+                screen: { price: 9290000, time: '40 phút', warranty: '06 tháng' },
+                glass: { price: 2190000, time: '50 phút', warranty: '12 tháng' },
+                faceid: { price: 1890000, time: '45 phút', warranty: '06 tháng' }
+            },
+            ip14pm: {
+                battery: { price: 1190000, time: '30 phút', warranty: '12 tháng' },
+                screen: { price: 7490000, time: '40 phút', warranty: '06 tháng' },
+                glass: { price: 1690000, time: '45 phút', warranty: '12 tháng' },
+                faceid: { price: 1490000, time: '45 phút', warranty: '06 tháng' }
+            },
+            ip13p: {
+                battery: { price: 950000, time: '30 phút', warranty: '12 tháng' },
+                screen: { price: 6200000, time: '30 phút', warranty: '06 tháng' },
+                glass: { price: 1190000, time: '40 phút', warranty: '12 tháng' },
+                faceid: { price: 1290000, time: '35 phút', warranty: '06 tháng' }
+            },
+            ip12pm: {
+                battery: { price: 790000, time: '30 phút', warranty: '12 tháng' },
+                screen: { price: 4290000, time: '30 phút', warranty: '06 tháng' },
+                glass: { price: 990000, time: '40 phút', warranty: '12 tháng' },
+                faceid: { price: 990000, time: '35 phút', warranty: '06 tháng' }
+            },
+            ip11pm: {
+                battery: { price: 650000, time: '25 phút', warranty: '12 tháng' },
+                screen: { price: 2900000, time: '30 phút', warranty: '06 tháng' },
+                glass: { price: 790000, time: '40 phút', warranty: '12 tháng' },
+                faceid: { price: 890000, time: '35 phút', warranty: '06 tháng' }
+            }
+        };
+
+        function calculateRepairCost() {
+            const model = document.getElementById('repair-phone-model').value;
+            const service = document.getElementById('repair-service-type').value;
+            const panel = document.getElementById('repair-result-panel');
+            
+            const info = REPAIR_PRICES[model][service];
+            const formatPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(info.price);
+
+            panel.innerHTML = `
+                <div style="background: rgba(0, 240, 255, 0.04); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 20px; padding: 24px; position:relative; overflow:hidden;">
+                    <div style="font-size: 0.8rem; color: var(--accent-blue); font-weight: 800; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 1px;">Ước tính chi phí</div>
+                    <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent-blue); margin-bottom: 16px;">${formatPrice}</div>
+                    
+                    <div style="display:flex; flex-direction:column; gap:10px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
+                            <span style="color:var(--text-secondary);">Thời gian xử lý:</span>
+                            <strong style="color:#fff;">${info.time} (Lấy ngay)</strong>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
+                            <span style="color:var(--text-secondary);">Thời hạn bảo hành linh kiện:</span>
+                            <strong style="color:#10B981;">${info.warranty} Lỗi 1 Đổi 1</strong>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
+                            <span style="color:var(--text-secondary);">Bảo hiểm linh kiện:</span>
+                            <span style="color:var(--text-muted);">Cam kết linh kiện zin bóc máy / Pisen nhập khẩu</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showToast(title, desc, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="toast-icon">${type === 'success' ? '✓' : 'ℹ️'}</div>
+                <div class="toast-body">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-desc">${desc}</div>
+                </div>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 50);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
+
+        async function handleRepairSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('rep-name').value.trim();
+            const phone = document.getElementById('rep-phone').value.trim();
+            const time = document.getElementById('rep-time').value;
+            const modelSelect = document.getElementById('repair-phone-model');
+            const serviceSelect = document.getElementById('repair-service-type');
+            
+            const modelName = modelSelect.options[modelSelect.selectedIndex].text;
+            const serviceName = serviceSelect.options[serviceSelect.selectedIndex].text;
+            const phoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
+
+            if(name.length < 2) {
+                showToast('⚠️ Lỗi thông tin', 'Vui lòng điền họ tên đầy đủ.', 'info');
+                return;
+            }
+            if(!phoneRegex.test(phone)) {
+                showToast('⚠️ Lỗi định dạng', 'Số điện thoại Việt Nam chưa đúng.', 'info');
+                return;
+            }
+
+            const payload = {
+                customerName: name,
+                phone: phone,
+                productId: 'repair_' + modelSelect.value,
+                productName: `Dịch vụ Sửa Chữa: ${modelName} - ${serviceName}`,
+                price: REPAIR_PRICES[modelSelect.value][serviceSelect.value].price,
+                installmentTerm: `Đặt hẹn lúc: ${time.replace('T', ' ')}`,
+                monthlyPayment: 0
+            };
+
+            try {
+                const response = await mockDB.insertLead(payload);
+                if (response.success) {
+                    showToast('🎉 Đặt hẹn thành công', `Mã đặt lịch hẹn của ${name} đã được gửi đến CRM. Hẹn gặp bạn lúc ${time.replace('T', ' ')}.`, 'success');
+                    document.getElementById('repair-booking-form').reset();
+                }
+            } catch (err) {
+                showToast('❌ Lỗi kết nối', 'Không thể kết nối với CRM. Vui lòng thử lại.', 'info');
+            }
+        }
+
+        // Calculate once initially
+        calculateRepairCost();
+    </script>
+</body>
+</html>
