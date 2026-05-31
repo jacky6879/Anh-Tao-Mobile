@@ -1,6 +1,7 @@
 /**
  * backend.js - Live Supabase Client & Local Cache Fallback Pipeline (Anh Táo Mobile)
- * Pre-wired with full active SDK fetching and robust hybrid offline fallbacks.
+ * Extended with full CRUD write operations (Save/Edit/Delete) for products,
+ * repairs, page copywriting, news blogs, and customer leads management.
  */
 
 // 1. SUPABASE CONNECTION CONFIGURATION
@@ -200,26 +201,26 @@ const PRODUCTS_SEED = [
 ];
 
 const REPAIRS_SEED = [
-    { device_model: 'ip15pm', service_type: 'battery', service_name: 'Thay Pin Dung Lượng Cao Pisen', price: 1490000, duration: '35 phút', warranty: '12 tháng' },
-    { device_model: 'ip15pm', service_type: 'screen', service_name: 'Thay Màn Hình Zin Cảm Ứng VNA', price: 9290000, duration: '40 phút', warranty: '06 tháng' },
-    { device_model: 'ip15pm', service_type: 'glass', service_name: 'Ép Kính Mặt Trước Cường Lực', price: 2190000, duration: '50 phút', warranty: '12 tháng' },
-    { device_model: 'ip15pm', service_type: 'faceid', service_name: 'Sửa Lỗi Mất Face ID / Camera Trước', price: 1890000, duration: '45 phút', warranty: '06 tháng' },
-    { device_model: 'ip14pm', service_type: 'battery', service_name: 'Thay Pin Dung Lượng Cao Pisen', price: 1190000, duration: '30 phút', warranty: '12 tháng' },
-    { device_model: 'ip14pm', service_type: 'screen', service_name: 'Thay Màn Hình Zin Cảm Ứng VNA', price: 7490000, duration: '40 phút', warranty: '06 tháng' },
-    { device_model: 'ip14pm', service_type: 'glass', service_name: 'Ép Kính Mặt Trước Cường Lực', price: 1690000, duration: '45 phút', warranty: '12 tháng' },
-    { device_model: 'ip14pm', service_type: 'faceid', service_name: 'Sửa Lỗi Mất Face ID / Camera Trước', price: 1490000, duration: '45 phút', warranty: '06 tháng' },
-    { device_model: 'ip13p', service_type: 'battery', service_name: 'Thay Pin Dung Lượng Cao Pisen', price: 950000, duration: '30 phút', warranty: '12 tháng' },
-    { device_model: 'ip13p', service_type: 'screen', service_name: 'Thay Màn Hình Zin Cảm Ứng VNA', price: 6200000, duration: '30 phút', warranty: '06 tháng' },
-    { device_model: 'ip13p', service_type: 'glass', service_name: 'Ép Kính Mặt Trước Cường Lực', price: 1190000, duration: '40 phút', warranty: '12 tháng' },
-    { device_model: 'ip13p', service_type: 'faceid', service_name: 'Sửa Lỗi Mất Face ID / Camera Trước', price: 1290000, duration: '35 phút', warranty: '06 tháng' },
-    { device_model: 'ip12pm', service_type: 'battery', service_name: 'Thay Pin Dung Lượng Cao Pisen', price: 790000, duration: '30 phút', warranty: '12 tháng' },
-    { device_model: 'ip12pm', service_type: 'screen', service_name: 'Thay Màn Hình Zin Cảm Ứng VNA', price: 4290000, duration: '30 phút', warranty: '06 tháng' },
-    { device_model: 'ip12pm', service_type: 'glass', service_name: 'Ép Kính Mặt Trước Cường Lực', price: 990000, duration: '40 phút', warranty: '12 tháng' },
-    { device_model: 'ip12pm', service_type: 'faceid', service_name: 'Sửa Lỗi Mất Face ID / Camera Trước', price: 990000, duration: '35 phút', warranty: '06 tháng' },
-    { device_model: 'ip11pm', service_type: 'battery', service_name: 'Thay Pin Dung Lượng Cao Pisen', price: 650000, duration: '25 phút', warranty: '12 tháng' },
-    { device_model: 'ip11pm', service_type: 'screen', service_name: 'Thay Màn Hình Zin Cảm Ứng VNA', price: 2900000, duration: '30 phút', warranty: '06 tháng' },
-    { device_model: 'ip11pm', service_type: 'glass', service_name: 'Ép Kính Mặt Trước Cường Lực', price: 790000, duration: '40 phút', warranty: '12 tháng' },
-    { device_model: 'ip11pm', service_type: 'faceid', service_name: 'Sửa Lỗi Mất Face ID / Camera Trước', price: 890000, duration: '35 phút', warranty: '06 tháng' }
+    { id: 1, device_model: 'ip15pm', service_type: 'battery', service_name: 'Thay Pin Dung Lượng Cao Pisen', price: 1490000, duration: '35 phút', warranty: '12 tháng' },
+    { id: 2, device_model: 'ip15pm', service_type: 'screen', service_name: 'Thay Màn Hình Zin Cảm Ứng VNA', price: 9290000, duration: '40 phút', warranty: '06 tháng' },
+    { id: 3, device_model: 'ip15pm', service_type: 'glass', service_name: 'Ép Kính Mặt Trước Cường Lực', price: 2190000, duration: '50 phút', warranty: '12 tháng' },
+    { id: 4, device_model: 'ip15pm', service_type: 'faceid', service_name: 'Sửa Lỗi Mất Face ID / Camera Trước', price: 1890000, duration: '45 phút', warranty: '06 tháng' },
+    { id: 5, device_model: 'ip14pm', service_type: 'battery', service_name: 'Thay Pin Dung Lượng Cao Pisen', price: 1190000, duration: '30 phút', warranty: '12 tháng' },
+    { id: 6, device_model: 'ip14pm', service_type: 'screen', service_name: 'Thay Màn Hình Zin Cảm Ứng VNA', price: 7490000, duration: '40 phút', warranty: '06 tháng' },
+    { id: 7, device_model: 'ip14pm', service_type: 'glass', service_name: 'Ép Kính Mặt Trước Cường Lực', price: 1690000, duration: '45 phút', warranty: '12 tháng' },
+    { id: 8, device_model: 'ip14pm', service_type: 'faceid', service_name: 'Sửa Lỗi Mất Face ID / Camera Trước', price: 1490000, duration: '45 phút', warranty: '06 tháng' },
+    { id: 9, device_model: 'ip13p', service_type: 'battery', service_name: 'Thay Pin Dung Lượng Cao Pisen', price: 950000, duration: '30 phút', warranty: '12 tháng' },
+    { id: 10, device_model: 'ip13p', service_type: 'screen', service_name: 'Thay Màn Hình Zin Cảm Ứng VNA', price: 6200000, duration: '30 phút', warranty: '06 tháng' },
+    { id: 11, device_model: 'ip13p', service_type: 'glass', service_name: 'Ép Kính Mặt Trước Cường Lực', price: 1190000, duration: '40 phút', warranty: '12 tháng' },
+    { id: 12, device_model: 'ip13p', service_type: 'faceid', service_name: 'Sửa Lỗi Mất Face ID / Camera Trước', price: 1290000, duration: '35 phút', warranty: '06 tháng' },
+    { id: 13, device_model: 'ip12pm', service_type: 'battery', service_name: 'Thay Pin Dung Lượng Cao Pisen', price: 790000, duration: '30 phút', warranty: '12 tháng' },
+    { id: 14, device_model: 'ip12pm', service_type: 'screen', service_name: 'Thay Màn Hình Zin Cảm Ứng VNA', price: 4290000, duration: '30 phút', warranty: '06 tháng' },
+    { id: 15, device_model: 'ip12pm', service_type: 'glass', service_name: 'Ép Kính Mặt Trước Cường Lực', price: 990000, duration: '40 phút', warranty: '12 tháng' },
+    { id: 16, device_model: 'ip12pm', service_type: 'faceid', service_name: 'Sửa Lỗi Mất Face ID / Camera Trước', price: 990000, duration: '35 phút', warranty: '06 tháng' },
+    { id: 17, device_model: 'ip11pm', service_type: 'battery', service_name: 'Thay Pin Dung Lượng Cao Pisen', price: 650000, duration: '25 phút', warranty: '12 tháng' },
+    { id: 18, device_model: 'ip11pm', service_type: 'screen', service_name: 'Thay Màn Hình Zin Cảm Ứng VNA', price: 2900000, duration: '30 phút', warranty: '06 tháng' },
+    { id: 19, device_model: 'ip11pm', service_type: 'glass', service_name: 'Ép Kính Mặt Trước Cường Lực', price: 790000, duration: '40 phút', warranty: '12 tháng' },
+    { id: 20, device_model: 'ip11pm', service_type: 'faceid', service_name: 'Sửa Lỗi Mất Face ID / Camera Trước', price: 890000, duration: '35 phút', warranty: '06 tháng' }
 ];
 
 const PAGE_CONTENT_SEED = {
@@ -263,15 +264,34 @@ const BLOGS_SEED = [
     }
 ];
 
-
 // ==========================================
--- 3. DYNAMIC API PIPELINE METHODS
+-- 3. PERSISTENT LOCAL STORAGE EMULATOR INIT
 // ==========================================
 
-// Global Mock Leads initial Setup
-if (!localStorage.getItem('vibemobile_leads')) {
-    localStorage.setItem('vibemobile_leads', JSON.stringify([]));
+function initLocalStorageBuffers() {
+    if (!localStorage.getItem('vibemobile_leads')) {
+        localStorage.setItem('vibemobile_leads', JSON.stringify([]));
+    }
+    if (!localStorage.getItem('vibemobile_products')) {
+        localStorage.setItem('vibemobile_products', JSON.stringify(PRODUCTS_SEED));
+    }
+    if (!localStorage.getItem('vibemobile_repairs')) {
+        localStorage.setItem('vibemobile_repairs', JSON.stringify(REPAIRS_SEED));
+    }
+    if (!localStorage.getItem('vibemobile_content')) {
+        localStorage.setItem('vibemobile_content', JSON.stringify(PAGE_CONTENT_SEED));
+    }
+    if (!localStorage.getItem('vibemobile_blogs')) {
+        localStorage.setItem('vibemobile_blogs', JSON.stringify(BLOGS_SEED));
+    }
+    console.log("⚡ [Anh Táo Mobile DB] Emulated Local Storage Buffers verified.");
 }
+initLocalStorageBuffers();
+
+
+// ==========================================
+-- 4. DYNAMIC READ API METHOD OVERRIDES
+// ==========================================
 
 // Fetch all active products
 async function fetchProducts() {
@@ -285,7 +305,7 @@ async function fetchProducts() {
             
             if (error) throw error;
             if (data && data.length > 0) {
-                // Map database columns to app-specific nested specs key if needed
+                // Map database columns to app-specific nested specs key
                 return data.map(item => ({
                     id: item.id,
                     name: item.name,
@@ -313,7 +333,7 @@ async function fetchProducts() {
         }
     }
     // Return local cache array
-    return PRODUCTS_SEED;
+    return JSON.parse(localStorage.getItem('vibemobile_products')) || PRODUCTS_SEED;
 }
 
 // Fetch all repair service prices
@@ -323,7 +343,8 @@ async function fetchRepairs() {
             console.log("🔗 [Supabase API] Fetching repairs matrix...");
             const { data, error } = await supabase
                 .from('repairs')
-                .select('*');
+                .select('*')
+                .order('id', { ascending: true });
             
             if (error) throw error;
             if (data && data.length > 0) {
@@ -333,7 +354,7 @@ async function fetchRepairs() {
             console.warn("⚠️ [Supabase API] Error fetching repairs, fell back to local cache:", err.message);
         }
     }
-    return REPAIRS_SEED;
+    return JSON.parse(localStorage.getItem('vibemobile_repairs')) || REPAIRS_SEED;
 }
 
 // Fetch landing page texts and hotlines
@@ -351,12 +372,13 @@ async function fetchPageContent() {
                 data.forEach(row => {
                     contentMap[row.key] = row.value;
                 });
+                return contentMap;
             }
         } catch (err) {
             console.warn("⚠️ [Supabase API] Error fetching page content, fell back to local cache:", err.message);
         }
     }
-    return contentMap;
+    return JSON.parse(localStorage.getItem('vibemobile_content')) || PAGE_CONTENT_SEED;
 }
 
 // Fetch all active tech blogs
@@ -377,10 +399,263 @@ async function fetchBlogs() {
             console.warn("⚠️ [Supabase API] Error fetching blogs, fell back to local cache:", err.message);
         }
     }
-    return BLOGS_SEED;
+    return JSON.parse(localStorage.getItem('vibemobile_blogs')) || BLOGS_SEED;
 }
 
-// Unified Mock database lead insertion with active Supabase inserting
+// Fetch captured customer leads
+async function fetchLeads() {
+    if (supabase) {
+        try {
+            console.log("🔗 [Supabase API] Fetching leads logs...");
+            const { data, error } = await supabase
+                .from('leads')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            if (data) return data;
+        } catch (err) {
+            console.warn("⚠️ [Supabase API] Error fetching leads, fell back to local cache:", err.message);
+        }
+    }
+    return JSON.parse(localStorage.getItem('vibemobile_leads')) || [];
+}
+
+
+// ==========================================
+-- 5. WRITE CRUD OPERATIONS (ADMIN SERVICES)
+// ==========================================
+
+// Save or Update Product
+async function saveProduct(prod) {
+    console.group("🚀 [CRUD Write] Save Product");
+    console.log("Product Payload:", prod);
+    
+    // 1. Sync to local storage emulator buffer
+    const localProds = JSON.parse(localStorage.getItem('vibemobile_products')) || PRODUCTS_SEED;
+    const existingIdx = localProds.findIndex(p => p.id === prod.id);
+    
+    if (existingIdx > -1) {
+        localProds[existingIdx] = prod;
+    } else {
+        localProds.push(prod);
+    }
+    localStorage.setItem('vibemobile_products', JSON.stringify(localProds));
+
+    let dbSynced = false;
+
+    // 2. Sync to live Supabase DB
+    if (supabase) {
+        try {
+            console.log("🔗 [Supabase DB] Upserting product row...");
+            const { error } = await supabase
+                .from('products')
+                .upsert([{
+                    id: prod.id,
+                    name: prod.name,
+                    category: prod.category,
+                    price: prod.price,
+                    original_price: prod.originalPrice,
+                    image: prod.image,
+                    rating: prod.rating,
+                    reviews: prod.reviews,
+                    badge: prod.badge,
+                    specs_screen: prod.specs.screen,
+                    specs_cpu: prod.specs.cpu,
+                    specs_ram: prod.specs.ram,
+                    specs_storage: prod.specs.storage,
+                    specs_battery: prod.specs.battery,
+                    specs_box: prod.specs.box,
+                    specs_warranty: prod.specs.warranty,
+                    specs_condition: prod.specs.condition
+                }]);
+            
+            if (error) throw error;
+            dbSynced = true;
+            console.log("✓ [Supabase DB] Product upserted successfully.");
+        } catch (err) {
+            console.warn("⚠️ [Supabase DB] Upsert failed, using offline cache fallback:", err.message);
+        }
+    }
+    console.groupEnd();
+    return { success: true, synced: dbSynced };
+}
+
+// Delete Product
+async function deleteProduct(productId) {
+    console.group("🚀 [CRUD Delete] Delete Product ID:", productId);
+    
+    // 1. Sync to local storage emulator buffer
+    const localProds = JSON.parse(localStorage.getItem('vibemobile_products')) || PRODUCTS_SEED;
+    const updated = localProds.filter(p => p.id !== productId);
+    localStorage.setItem('vibemobile_products', JSON.stringify(updated));
+
+    let dbSynced = false;
+
+    // 2. Sync to live Supabase DB
+    if (supabase) {
+        try {
+            console.log("🔗 [Supabase DB] Deleting product row...");
+            const { error } = await supabase
+                .from('products')
+                .delete()
+                .eq('id', productId);
+            
+            if (error) throw error;
+            dbSynced = true;
+            console.log("✓ [Supabase DB] Product deleted successfully.");
+        } catch (err) {
+            console.warn("⚠️ [Supabase DB] Delete failed, using offline cache:", err.message);
+        }
+    }
+    console.groupEnd();
+    return { success: true, synced: dbSynced };
+}
+
+// Update Repair Price Row
+async function saveRepair(row) {
+    console.group("🚀 [CRUD Write] Save Repair Price Row");
+    
+    // 1. Sync to local storage emulator
+    const localRepairs = JSON.parse(localStorage.getItem('vibemobile_repairs')) || REPAIRS_SEED;
+    const idx = localRepairs.findIndex(r => r.device_model === row.device_model && r.service_type === row.service_type);
+    
+    if (idx > -1) {
+        localRepairs[idx] = { ...localRepairs[idx], ...row };
+    } else {
+        row.id = localRepairs.length + 1;
+        localRepairs.push(row);
+    }
+    localStorage.setItem('vibemobile_repairs', JSON.stringify(localRepairs));
+
+    let dbSynced = false;
+
+    // 2. Sync to live Supabase DB
+    if (supabase) {
+        try {
+            console.log("🔗 [Supabase DB] Upserting repair price row...");
+            // Query by ID if present, otherwise query by model + type
+            const payload = {
+                device_model: row.device_model,
+                service_type: row.service_type,
+                service_name: row.service_name,
+                price: row.price,
+                duration: row.duration,
+                warranty: row.warranty
+            };
+            if (row.id) payload.id = row.id;
+
+            const { error } = await supabase
+                .from('repairs')
+                .upsert([payload]);
+            
+            if (error) throw error;
+            dbSynced = true;
+            console.log("✓ [Supabase DB] Repair upserted successfully.");
+        } catch (err) {
+            console.warn("⚠️ [Supabase DB] Repair upsert failed, using offline cache:", err.message);
+        }
+    }
+    console.groupEnd();
+    return { success: true, synced: dbSynced };
+}
+
+// Save Page Content Overwrite
+async function savePageContent(key, value) {
+    console.group("🚀 [CRUD Write] Save Page Content Key:", key);
+    
+    // 1. Sync to local storage
+    const localContent = JSON.parse(localStorage.getItem('vibemobile_content')) || PAGE_CONTENT_SEED;
+    localContent[key] = value;
+    localStorage.setItem('vibemobile_content', JSON.stringify(localContent));
+
+    let dbSynced = false;
+
+    // 2. Sync to live Supabase
+    if (supabase) {
+        try {
+            console.log("🔗 [Supabase DB] Upserting page_content copy...");
+            const { error } = await supabase
+                .from('page_content')
+                .upsert([{ key, value }]);
+            
+            if (error) throw error;
+            dbSynced = true;
+            console.log("✓ [Supabase DB] Page content key saved successfully.");
+        } catch (err) {
+            console.warn("⚠️ [Supabase DB] Content upsert failed, using offline cache:", err.message);
+        }
+    }
+    console.groupEnd();
+    return { success: true, synced: dbSynced };
+}
+
+// Save/Publish Blog Post
+async function saveBlog(blog) {
+    console.group("🚀 [CRUD Write] Publish Blog Post");
+    
+    // 1. Sync to local storage
+    const localBlogs = JSON.parse(localStorage.getItem('vibemobile_blogs')) || BLOGS_SEED;
+    if (!blog.id) {
+        blog.id = localBlogs.length + 1;
+        localBlogs.push(blog);
+    } else {
+        const idx = localBlogs.findIndex(b => b.id == blog.id);
+        if (idx > -1) localBlogs[idx] = blog;
+    }
+    localStorage.setItem('vibemobile_blogs', JSON.stringify(localBlogs));
+
+    let dbSynced = false;
+
+    // 2. Sync to live Supabase DB
+    if (supabase) {
+        try {
+            console.log("🔗 [Supabase DB] Inserting blog post...");
+            const { error } = await supabase
+                .from('blogs')
+                .insert([{
+                    title: blog.title,
+                    category: blog.category,
+                    published_date: blog.published_date,
+                    thumbnail_url: blog.thumbnail_url,
+                    brief: blog.brief,
+                    content: blog.content
+                }]);
+            
+            if (error) throw error;
+            dbSynced = true;
+            console.log("✓ [Supabase DB] Blog published successfully.");
+        } catch (err) {
+            console.warn("⚠️ [Supabase DB] Blog insert failed, using offline cache:", err.message);
+        }
+    }
+    console.groupEnd();
+    return { success: true, synced: dbSynced };
+}
+
+// Clear Leads Database
+async function clearLeads() {
+    localStorage.setItem('vibemobile_leads', JSON.stringify([]));
+    
+    if (supabase) {
+        try {
+            console.log("🔗 [Supabase DB] Deleting all leads rows...");
+            const { error } = await supabase
+                .from('leads')
+                .delete()
+                .gt('id', 0); // Deletes all rows safely
+            if (error) throw error;
+        } catch (err) {
+            console.warn("⚠️ [Supabase DB] Live clear failed:", err.message);
+        }
+    }
+    return true;
+}
+
+
+// ==========================================
+-- 6. LEADS INSERTION PIPELINE (FORM API)
+// ==========================================
+
 class DatabaseLeadController {
     async insertLead(leadData) {
         console.group("🚀 [API POST] Submit customer lead to database");
@@ -439,7 +714,7 @@ const mockDB = new DatabaseLeadController();
 
 
 // ==========================================
--- 4. UTILITIES & CALCULATORS
+-- 7. UTILITIES & CALCULATORS
 // ==========================================
 
 // 0% Installment calculator

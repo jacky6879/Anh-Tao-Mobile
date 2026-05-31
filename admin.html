@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Hệ Thống Quản Trị - Anh Táo Mobile</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Supabase JS Client SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/backend.js" defer></script>
+    <script src="js/app.js" defer></script>
+    
+    <style>
+        /* Extra Admin styles to harmonise the sidebar layouts */
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--bg-base);
+        }
+        .admin-sidebar {
+            width: 260px;
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-glass);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            position: fixed;
+            height: 100vh;
+            z-index: 10;
+        }
+        .admin-content {
+            flex: 1;
+            padding: 40px;
+            margin-left: 260px;
+            background: radial-gradient(circle at 80% 20%, rgba(255, 107, 0, 0.03) 0%, rgba(6, 6, 8, 0) 50%);
+        }
+        .sidebar-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .sidebar-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 14px 18px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .sidebar-btn:hover, .sidebar-btn.active {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+            padding-left: 15px;
+        }
+        .admin-panel {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        .admin-panel.active {
+            display: block;
+        }
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            padding: 24px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .kpi-num {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1.1;
+        }
+        .kpi-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-glass);
+        }
+        .admin-table th, .admin-table td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-glass);
+        }
+        .admin-table th {
+            background: rgba(255, 255, 255, 0.02);
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+        .admin-table tr:last-child td {
+            border-bottom: none;
+        }
+        .admin-table tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+        .action-row {
+            display: flex;
+            gap: 8px;
+        }
+        .action-btn {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition-smooth);
+        }
+        .action-edit {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--accent-blue);
+        }
+        .action-edit:hover {
+            background: var(--accent-blue-gradient);
+            color: #fff;
+        }
+        .action-delete {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        .action-delete:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+        
+        /* Security Shield styles */
+        .login-overlay {
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: var(--bg-base);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            transition: var(--transition-smooth);
+        }
+        .login-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-glass);
+            border-radius: 28px;
+            padding: 40px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: var(--shadow-premium);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Secure Login Shield -->
+    <div class="login-overlay" id="login-shield">
+        <div class="login-card">
+            <center>
+                <div class="logo" style="font-size: 1.8rem; margin-bottom: 12px;">
+                    <span>Anh Táo</span> Mobile
+                </div>
+                <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom: 30px;">HỆ THỐNG QUẢN TRỊ NỘI DUNG (CMS)</p>
+            </center>
+            
+            <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+                <div class="form-group">
+                    <label for="admin-user">Tên tài khoản quản trị</label>
+                    <input type="text" id="admin-user" class="form-control" placeholder="admin" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="admin-pass">Mật khẩu bảo mật</label>
+                    <input type="password" id="admin-pass" class="form-control" placeholder="••••••••••••" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px; padding: 14px;">Xác Thực Đăng Nhập</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Main Admin Workspace (Hidden until auth success) -->
+    <div class="admin-layout" id="admin-workspace" style="display: none;">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar">
+            <div>
+                <a href="index.html" class="logo" style="font-size: 1.3rem;">
+                    <span>Anh Táo</span> Mobile
+                </a>
+                <span style="font-size:0.7rem; color:var(--text-muted); letter-spacing:0.5px; text-transform:uppercase; font-weight:700; margin-top:4px; display:block;">Cổng Quản Trị Hệ Thống</span>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li>
+                    <button class="sidebar-btn active" onclick="switchPanel('overview')">
+                        📊 Tổng quan & Leads
+                    </button>
+                </li>
+                <li>
+                    <button class="sidebar-btn" onclick="switchPanel('products')">
+                        📱 Quản lý sản phẩm
+                    </button>
+                </li>
+                <li>
+                    <button class="sidebar-btn" onclick="switchPanel('repairs')">
+                        🛠️ Bảng giá sửa chữa
+                    </button>
+                </li>
+                <li>
+                    <button class="sidebar-btn" onclick="switchPanel('copywriting')">
+                        📝 Nội dung trang chủ
+                    </button>
+                </li>
+                <li>
+                    <button class="sidebar-btn" onclick="switchPanel('blogs')">
+                        📰 Đăng bài viết mới
+                    </button>
+                </li>
+            </ul>
+            
+            <div style="margin-top: auto;">
+                <button class="btn btn-secondary" onclick="handleLogout()" style="width: 100%; padding:10px; font-size:0.85rem;">
+                    🚪 Đăng xuất quản trị
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Panels -->
+        <main class="admin-content">
+            
+            <!-- Tab A: KPI & Customer Leads Log -->
+            <section class="admin-panel active" id="panel-overview">
+                <div style="margin-bottom: 30px;">
+                    <h1 style="font-size: 1.8rem; font-weight:800;">Tổng quan & Quản lý Leads</h1>
+                    <p style="color:var(--text-secondary); font-size:0.9rem;">Thống kê tổng thể dữ liệu bán hàng và hồ sơ đăng ký của khách hàng gửi về.</p>
+                </div>
+                
+                <!-- KPI Indicators -->
+                <div class="kpi-row">
+                    <div class="kpi-card">
+                        <span class="kpi-num" id="kpi-products">0</span>
+                        <span class="kpi-label">Tổng số sản phẩm</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-num" id="kpi-repairs">0</span>
+                        <span class="kpi-label">Dòng máy & Dịch vụ sửa</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-num" id="kpi-blogs">0</span>
+                        <span class="kpi-label">Số bài viết xuất bản</span>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-num" id="kpi-leads" style="color: var(--accent-blue);">0</span>
+                        <span class="kpi-label">Hồ sơ khách hàng (Leads)</span>
+                    </div>
+                </div>
+
+                <!-- Captured Leads Logs -->
+                <div style="margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="font-size:1.2rem; font-weight:700;">Danh sách Đăng ký & Lịch hẹn của Khách hàng</h3>
+                    <button class="action-btn action-delete" onclick="clearAllLeadsLogs()" style="padding:8px 16px;">🧹 Xóa toàn bộ leads</button>
+                </div>
+                
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Khách hàng</th>
+                            <th>Số điện thoại</th>
+                            <th>Yêu cầu / Sản phẩm</th>
+                            <th>Hình thức mua</th>
+                            <th>Ước tính thanh toán</th>
+                            <th>Thời gian gửi</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leads-table-body">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Tab B: Products CRUD Manager -->
+            <section class="admin-panel" id="panel-products">
+                <div style="margin-bottom: 30px;">
+                    <h1 style="font-size: 1.8rem; font-weight:800;">Quản lý Sản phẩm</h1>
+                    <p style="color:var(--text-secondary); font-size:0.9rem;">Thêm sản phẩm mới hoặc biên tập sửa/xóa các dòng máy đang kinh doanh trên website.</p>
+                </div>
+
+                <!-- Add/Edit form -->
+                <div style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 24px; padding: 30px; margin-bottom: 40px;">
+                    <h3 style="font-size: 1.15rem; font-weight:700; margin-bottom: 20px; color:var(--primary);" id="prod-form-title">➕ Thêm Sản Phẩm Mới</h3>
+                    
+                    <form id="admin-product-form" onsubmit="handleProductSubmit(event)">
+                        <input type="hidden" id="prod-is-edit" value="false">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="prod-id">Mã sản phẩm (ID) *</label>
+                                <input type="text" id="prod-id" class="form-control" placeholder="VD: used_ip14promax" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prod-name">Tên sản phẩm đầy đủ *</label>
+                                <input type="text" id="prod-name" class="form-control" placeholder="iPhone 14 Pro Max 256GB - 99%" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="prod-category">Danh mục sản phẩm</label>
+                                <select id="prod-category" class="form-control">
+                                    <option value="new">Điện thoại mới (Fullbox)</option>
+                                    <option value="used">Điện thoại cũ (Likenew 99%)</option>
+                                    <option value="accessory">Phụ kiện công nghệ cao</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="prod-badge">Thẻ Nhãn (Badge)</label>
+                                <input type="text" id="prod-badge" class="form-control" placeholder="VD: Bán chạy nhất, Giá hời">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="prod-price">Giá bán hiện tại (VND) *</label>
+                                <input type="number" id="prod-price" class="form-control" placeholder="21290000" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prod-original">Giá gốc chưa giảm (VND) *</label>
+                                <input type="number" id="prod-original" class="form-control" placeholder="28990000" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prod-image">Địa chỉ ảnh sản phẩm (URL) *</label>
+                            <input type="url" id="prod-image" class="form-control" placeholder="https://images.unsplash.com/photo-..." required>
+                        </div>
+
+                        <!-- Technical Specs Blocks -->
+                        <h4 style="font-size:0.95rem; font-weight:700; margin: 24px 0 12px 0; border-top:1px solid var(--border-glass); padding-top:20px;">Cấu hình & Tình trạng thiết bị</h4>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="spec-screen">Màn hình hiển thị</label>
+                                <input type="text" id="spec-screen" class="form-control" placeholder="6.7 inches, OLED 120Hz">
+                            </div>
+                            <div class="form-group">
+                                <label for="spec-cpu">Bộ vi xử lý (CPU)</label>
+                                <input type="text" id="spec-cpu" class="form-control" placeholder="Apple A16 Bionic">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="spec-ram">Dung lượng RAM</label>
+                                <input type="text" id="spec-ram" class="form-control" placeholder="6 GB">
+                            </div>
+                            <div class="form-group">
+                                <label for="spec-storage">Bộ nhớ trong (ROM)</label>
+                                <input type="text" id="spec-storage" class="form-control" placeholder="256 GB">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="spec-battery">Hiệu suất Pin</label>
+                                <input type="text" id="spec-battery" class="form-control" placeholder="Cam kết > 89% (Chưa chai pin)">
+                            </div>
+                            <div class="form-group">
+                                <label for="spec-warranty">Gói bảo hành</label>
+                                <input type="text" id="spec-warranty" class="form-control" placeholder="06 tháng AnhTáoCare bảo hành cả nguồn màn hình">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="spec-condition">Độ mới (Ngoại hình)</label>
+                                <input type="text" id="spec-condition" class="form-control" placeholder="Đẹp 99% không cấn móp, zin áp suất">
+                            </div>
+                            <div class="form-group">
+                                <label for="spec-box">Hộp & Phụ kiện đi kèm</label>
+                                <input type="text" id="spec-box" class="form-control" placeholder="Cáp sạc cao cấp, tặng kèm ốp cường lực">
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 12px; margin-top: 10px;">
+                            <button type="submit" class="btn btn-primary" style="flex:1; padding:14px;" id="prod-submit-btn">Lưu thông tin sản phẩm</button>
+                            <button type="button" class="btn btn-secondary" onclick="resetProductForm()" style="padding:14px;">Hủy bỏ</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Products Table -->
+                <h3 style="font-size:1.2rem; font-weight:700; margin-bottom: 20px;">Danh sách sản phẩm hiện tại</h3>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Ảnh</th>
+                            <th>Mã sản phẩm (ID)</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Danh mục</th>
+                            <th>Giá bán</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-table-body">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Tab C: Repairs Price Manager -->
+            <section class="admin-panel" id="panel-repairs">
+                <div style="margin-bottom: 30px;">
+                    <h1 style="font-size: 1.8rem; font-weight:800;">Bảng giá Sửa chữa</h1>
+                    <p style="color:var(--text-secondary); font-size:0.9rem;">Cập nhật trực tiếp đơn giá dịch vụ kỹ thuật, thời gian làm và bảo hành tương ứng với dòng máy.</p>
+                </div>
+                
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Dòng máy</th>
+                            <th>Loại bệnh / Linh kiện</th>
+                            <th>Đơn giá (VND)</th>
+                            <th>Thời gian sửa</th>
+                            <th>Bảo hành</th>
+                            <th>Lưu</th>
+                        </tr>
+                    </thead>
+                    <tbody id="repairs-table-body">
+                        <!-- Loaded dynamically with editable inline inputs -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Tab D: Home Page Copywriting Overrides -->
+            <section class="admin-panel" id="panel-copywriting">
+                <div style="margin-bottom: 30px;">
+                    <h1 style="font-size: 1.8rem; font-weight:800;">Nội dung Trang chủ</h1>
+                    <p style="color:var(--text-secondary); font-size:0.9rem;">Cấu hình nhanh các đoạn văn bản quảng cáo, thông tin liên hệ và địa chỉ chung của chuỗi hệ thống.</p>
+                </div>
+                
+                <div style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 24px; padding: 40px;">
+                    <form id="admin-content-form" onsubmit="handleContentSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="copy-banner-1">Tiêu đề Banner chạy dòng 1</label>
+                                <input type="text" id="copy-banner-1" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="copy-banner-2">Tiêu đề Banner chạy dòng 2 (Glow)</label>
+                                <input type="text" id="copy-banner-2" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="copy-desc">Đoạn mô tả ngắn dưới tiêu đề Banner</label>
+                            <textarea id="copy-desc" class="form-control" rows="3" style="font-family:inherit; font-size:0.95rem; resize:none;" required></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="copy-hotline">Số điện thoại Hotline Bán hàng</label>
+                                <input type="text" id="copy-hotline" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="copy-hotline-repair">Số điện thoại Hotline Phòng kỹ thuật</label>
+                                <input type="text" id="copy-hotline-repair" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="copy-email">Hòm thư điện tử Hỗ trợ (Email)</label>
+                                <input type="email" id="copy-email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="copy-address">Địa chỉ cơ sở cửa hàng chính</label>
+                                <input type="text" id="copy-address" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 15px; padding: 14px;" id="copy-submit-btn">Cập Nhật Đồng Bộ Nội Dung Giao Diện</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Tab E: Blog Articles Publisher -->
+            <section class="admin-panel" id="panel-blogs">
+                <div style="margin-bottom: 30px;">
+                    <h1 style="font-size: 1.8rem; font-weight:800;">Đăng Bài Viết Mới</h1>
+                    <p style="color:var(--text-secondary); font-size:0.9rem;">Tự động xuất bản các bài viết chia sẻ cẩm nang công nghệ và tin tức ưu đãi lên trang web.</p>
+                </div>
+                
+                <div style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 24px; padding: 40px;">
+                    <form id="admin-blog-form" onsubmit="handleBlogSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="blog-title">Tiêu đề bài viết mới *</label>
+                                <input type="text" id="blog-title" class="form-control" placeholder="5 mẹo chọn cường lực chất lượng cao..." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="blog-category">Phân loại danh mục</label>
+                                <select id="blog-category" class="form-control">
+                                    <option value="Cẩm Nang Mua Sắm">Cẩm Nang Mua Sắm</option>
+                                    <option value="Đánh Giá Chi Tiết">Đánh Giá Chi Tiết</option>
+                                    <option value="Quy Trình Sửa Chữa">Quy Trình Sửa Chữa</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="blog-image">Ảnh đại diện bài viết (URL) *</label>
+                                <input type="url" id="blog-image" class="form-control" placeholder="https://images.unsplash.com/photo-..." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="blog-date">Ngày xuất bản đăng bài</label>
+                                <input type="text" id="blog-date" class="form-control" placeholder="31/05/2026" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="blog-brief">Đoạn tóm tắt bài viết ngắn hiển thị ngoài danh mục *</label>
+                            <textarea id="blog-brief" class="form-control" rows="2" style="font-family:inherit; font-size:0.95rem; resize:none;" required placeholder="Mô tả nhanh nội dung bài viết thu hút người xem..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="blog-content">Nội dung chi tiết bài viết (Hỗ trợ ký tự xuống dòng) *</label>
+                            <textarea id="blog-content" class="form-control" rows="12" style="font-family:inherit; font-size:0.95rem; line-height:1.7; resize:vertical;" required placeholder="Nội dung chính chia sẻ bài viết chi tiết..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px; padding: 14px;" id="blog-submit-btn">Xuất Bản Bài Viết Lên Website</button>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Toast ALERT Portal -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Local Controller logic for Admin interface -->
+    <script>
+        // Check local credentials
+        const ADMIN_CREDENTIALS = {
+            user: 'admin',
+            pass: 'anhtaomobile@2026'
+        };
+
+        // On document loads, verify Session storage
+        window.addEventListener('load', () => {
+            const isAuth = sessionStorage.getItem('anhtao_admin_auth');
+            if (isAuth === 'true') {
+                showDashboard();
+            }
+        });
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('admin-user').value.trim();
+            const p = document.getElementById('admin-pass').value.trim();
+
+            if (u === ADMIN_CREDENTIALS.user && p === ADMIN_CREDENTIALS.pass) {
+                sessionStorage.setItem('anhtao_admin_auth', 'true');
+                showToast('🔑 Xác thực thành công', 'Chào mừng Quản trị viên Anh Táo Mobile!', 'success');
+                showDashboard();
+            } else {
+                showToast('❌ Lỗi mật khẩu', 'Tên tài khoản hoặc mật khẩu bảo mật chưa đúng.', 'info');
+            }
+        }
+
+        async function showDashboard() {
+            document.getElementById('login-shield').style.display = 'none';
+            document.getElementById('admin-workspace').style.display = 'flex';
+            
+            // Wait for DB fetches
+            await loadAdminData();
+        }
+
+        function handleLogout() {
+            sessionStorage.removeItem('anhtao_admin_auth');
+            window.location.reload();
+        }
+
+        // Tab Switching
+        function switchPanel(panelId) {
+            document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+
+            event.currentTarget.classList.add('active');
+            document.getElementById('panel-' + panelId).classList.add('active');
+        }
+
+        // --- CRUD Loaders & UI Builders ---
+        async function loadAdminData() {
+            // Load KPI counts
+            document.getElementById('kpi-products').textContent = state.products.length;
+            document.getElementById('kpi-repairs').textContent = state.repairs.length;
+            document.getElementById('kpi-blogs').textContent = state.blogs.length;
+            
+            const leads = await fetchLeads();
+            document.getElementById('kpi-leads').textContent = leads.length;
+
+            // Render components lists
+            renderAdminLeads(leads);
+            renderAdminProducts();
+            renderAdminRepairs();
+            renderAdminCopywriting();
+        }
+
+        function renderAdminLeads(leads) {
+            const tbody = document.getElementById('leads-table-body');
+            tbody.innerHTML = '';
+            
+            if(leads.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Chưa có lượt đăng ký nào được ghi nhận.</td></tr>`;
+                return;
+            }
+
+            leads.forEach(l => {
+                const tr = document.createElement('tr');
+                const priceFormatted = l.price ? new Intl.NumberFormat('vi-VN', {style:'currency', currency:'VND'}).format(l.price) : '0 đ';
+                const monthlyFormatted = l.monthly_payment ? new Intl.NumberFormat('vi-VN', {style:'currency', currency:'VND'}).format(l.monthly_payment) : '0 đ';
+                const timeFormatted = l.created_at ? l.created_at.split('T')[0] + ' ' + l.created_at.split('T')[1].substring(0,5) : (l.installmentTerm.includes('Đặt hẹn') ? l.installmentTerm.split(': ')[1] : 'Đang duyệt');
+                
+                tr.innerHTML = `
+                    <td style="font-weight:700;">${l.customer_name || l.customerName}</td>
+                    <td>${l.phone}</td>
+                    <td style="color:#fff;">${l.product_name || l.productName}</td>
+                    <td>${l.installment_term || l.installmentTerm}</td>
+                    <td style="color:var(--primary); font-weight:700;">${l.monthly_payment ? monthlyFormatted + ' / tháng' : priceFormatted}</td>
+                    <td>${timeFormatted}</td>
+                    <td><span class="badge badge-primary" style="background:#10B981; color:#fff; border-color:transparent;">${l.status}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function clearAllLeadsLogs() {
+            if(confirm("Bạn có chắc chắn muốn xóa toàn bộ hồ sơ khách hàng gửi về không? Hành động này không thể hoàn tác.")) {
+                await clearLeads();
+                showToast('🧹 Dọn dẹp thành công', 'Đã xóa toàn bộ lịch sử lead khách hàng.', 'success');
+                const leads = await fetchLeads();
+                loadAdminData();
+            }
+        }
+
+        function renderAdminProducts() {
+            const tbody = document.getElementById('products-table-body');
+            tbody.innerHTML = '';
+            
+            state.products.forEach(p => {
+                const tr = document.createElement('tr');
+                const priceFormatted = new Intl.NumberFormat('vi-VN', {style:'currency', currency:'VND'}).format(p.price);
+                
+                let catText = 'Điện thoại mới';
+                if(p.category === 'used') catText = 'Điện thoại cũ';
+                if(p.category === 'accessory') catText = 'Phụ kiện';
+
+                tr.innerHTML = `
+                    <td><img src="${p.image}" style="height:44px; width:44px; object-fit:contain; border-radius:6px; background:#fff; padding:2px;"></td>
+                    <td style="font-family:monospace; color:var(--text-secondary);">${p.id}</td>
+                    <td style="font-weight:700; color:#fff;">${p.name}</td>
+                    <td>${catText}</td>
+                    <td style="color:var(--primary); font-weight:700;">${priceFormatted}</td>
+                    <td>
+                        <div class="action-row">
+                            <button class="action-btn action-edit" onclick="editProductLoader('${p.id}')">Sửa</button>
+                            <button class="action-btn action-delete" onclick="deleteProductHandler('${p.id}')">Xóa</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function editProductLoader(id) {
+            const p = state.products.find(prod => prod.id === id);
+            if(!p) return;
+
+            document.getElementById('prod-form-title').textContent = '📝 Biên Tập Sản Phẩm: ' + p.name.split(' - ')[0];
+            document.getElementById('prod-is-edit').value = 'true';
+            
+            // Populate form
+            document.getElementById('prod-id').value = p.id;
+            document.getElementById('prod-id').readOnly = true; // Cannot edit PK directly
+            document.getElementById('prod-name').value = p.name;
+            document.getElementById('prod-category').value = p.category;
+            document.getElementById('prod-badge').value = p.badge;
+            document.getElementById('prod-price').value = p.price;
+            document.getElementById('prod-original').value = p.originalPrice;
+            document.getElementById('prod-image').value = p.image;
+            
+            document.getElementById('spec-screen').value = p.specs.screen;
+            document.getElementById('spec-cpu').value = p.specs.cpu;
+            document.getElementById('spec-ram').value = p.specs.ram;
+            document.getElementById('spec-storage').value = p.specs.storage;
+            document.getElementById('spec-battery').value = p.specs.battery;
+            document.getElementById('spec-warranty').value = p.specs.warranty;
+            document.getElementById('spec-condition').value = p.specs.condition;
+            document.getElementById('spec-box').value = p.specs.box;
+            
+            switchPanel('products');
+            window.scrollTo({ top: document.getElementById('admin-product-form').offsetTop - 120, behavior: 'smooth' });
+        }
+
+        async function deleteProductHandler(id) {
+            if(confirm(`Bạn có chắc chắn muốn xóa sản phẩm có ID: ${id} khỏi hệ thống không?`)) {
+                const response = await deleteProduct(id);
+                if(response.success) {
+                    showToast('🗑️ Đã xóa sản phẩm', `Sản phẩm ${id} đã được xóa thành công khỏi database.`, 'success');
+                    // Reload data
+                    await loadDatabaseDetails();
+                    loadAdminData();
+                }
+            }
+        }
+
+        async function handleProductSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('prod-id').value.trim();
+            const name = document.getElementById('prod-name').value.trim();
+            const category = document.getElementById('prod-category').value;
+            const badge = document.getElementById('prod-badge').value.trim() || 'Bán chạy nhất';
+            const price = parseInt(document.getElementById('prod-price').value);
+            const originalPrice = parseInt(document.getElementById('prod-original').value);
+            const image = document.getElementById('prod-image').value.trim();
+
+            const specs = {
+                screen: document.getElementById('spec-screen').value.trim() || '6.7 inches',
+                cpu: document.getElementById('spec-cpu').value.trim() || 'Chipset Apple',
+                ram: document.getElementById('spec-ram').value.trim() || '8 GB',
+                storage: document.getElementById('spec-storage').value.trim() || '256 GB',
+                battery: document.getElementById('spec-battery').value.trim() || 'Hiệu suất >88%',
+                warranty: document.getElementById('spec-warranty').value.trim() || 'Bảo hành 12 tháng',
+                condition: document.getElementById('spec-condition').value.trim() || 'Đẹp như mới 99%',
+                box: document.getElementById('spec-box').value.trim() || 'Fullbox sạc cáp cường lực'
+            };
+
+            const payload = {
+                id, name, category, price, originalPrice, image, rating: 5.0, reviews: 100, badge, specs
+            };
+
+            const btn = document.getElementById('prod-submit-btn');
+            btn.disabled = true;
+            btn.textContent = 'Đang đồng bộ cơ sở dữ liệu...';
+
+            const response = await saveProduct(payload);
+            if(response.success) {
+                showToast('💾 Lưu thành công', `Thông tin sản phẩm ${name.split(' - ')[0]} đã được cập nhật trực tiếp.`, 'success');
+                resetProductForm();
+                await loadDatabaseDetails();
+                loadAdminData();
+            }
+            btn.disabled = false;
+            btn.textContent = 'Lưu thông tin sản phẩm';
+        }
+
+        function resetProductForm() {
+            document.getElementById('prod-form-title').textContent = '➕ Thêm Sản Phẩm Mới';
+            document.getElementById('prod-is-edit').value = 'false';
+            document.getElementById('prod-id').value = '';
+            document.getElementById('prod-id').readOnly = false;
+            document.getElementById('admin-product-form').reset();
+        }
+
+        function renderAdminRepairs() {
+            const tbody = document.getElementById('repairs-table-body');
+            tbody.innerHTML = '';
+
+            state.repairs.forEach(r => {
+                const tr = document.createElement('tr');
+                
+                let modelText = 'iPhone 15 Pro Max';
+                if(r.device_model === 'ip14pm') modelText = 'iPhone 14 Pro Max';
+                if(r.device_model === 'ip13p') modelText = 'iPhone 13 Pro';
+                if(r.device_model === 'ip12pm') modelText = 'iPhone 12 Pro Max';
+                if(r.device_model === 'ip11pm') modelText = 'iPhone 11 Pro Max';
+
+                tr.innerHTML = `
+                    <td style="font-weight:700;">${modelText}</td>
+                    <td style="color:#fff;">${r.service_name}</td>
+                    <td>
+                        <input type="number" class="form-control" id="rep-price-${r.id || r.device_model + '_' + r.service_type}" value="${r.price}" style="width:140px; padding:6px 10px;">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" id="rep-dur-${r.id || r.device_model + '_' + r.service_type}" value="${r.duration}" style="width:110px; padding:6px 10px;">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" id="rep-war-${r.id || r.device_model + '_' + r.service_type}" value="${r.warranty}" style="width:110px; padding:6px 10px;">
+                    </td>
+                    <td>
+                        <button class="action-btn action-edit" onclick="saveRepairRowHandler('${r.id}', '${r.device_model}', '${r.service_type}', '${r.service_name}')">Lưu</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function saveRepairRowHandler(id, deviceModel, serviceType, serviceName) {
+            const keySuffix = id !== 'undefined' && id ? id : deviceModel + '_' + serviceType;
+            const price = parseInt(document.getElementById('rep-price-' + keySuffix).value);
+            const duration = document.getElementById('rep-dur-' + keySuffix).value.trim();
+            const warranty = document.getElementById('rep-war-' + keySuffix).value.trim();
+
+            const payload = {
+                id: id !== 'undefined' && id ? parseInt(id) : null,
+                device_model: deviceModel,
+                service_type: serviceType,
+                service_name: serviceName,
+                price: price,
+                duration: duration,
+                warranty: warranty
+            };
+
+            const response = await saveRepair(payload);
+            if(response.success) {
+                showToast('🛠️ Đã lưu sửa chữa', `Cập nhật bảng giá cho dịch vụ thành công.`, 'success');
+                await loadDatabaseDetails();
+                loadAdminData();
+            }
+        }
+
+        function renderAdminCopywriting() {
+            const c = state.pageContent;
+            if(!c) return;
+
+            document.getElementById('copy-banner-1').value = c.hero_title_1;
+            document.getElementById('copy-banner-2').value = c.hero_title_2;
+            document.getElementById('copy-desc').value = c.hero_desc;
+            document.getElementById('copy-hotline').value = c.hotline;
+            document.getElementById('copy-hotline-repair').value = c.hotline_repair;
+            document.getElementById('copy-email').value = c.email;
+            document.getElementById('copy-address').value = c.address;
+        }
+
+        async function handleContentSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById('copy-submit-btn');
+            btn.disabled = true;
+            btn.textContent = 'Đang đồng bộ giao diện...';
+
+            const keys = ['hero_title_1', 'hero_title_2', 'hero_desc', 'hotline', 'hotline_repair', 'email', 'address'];
+            
+            for (let k of keys) {
+                let elId = 'copy-' + k.replace(/_/g, '-');
+                if (k === 'hero_desc') elId = 'copy-desc';
+                if (k === 'email') elId = 'copy-email';
+                if (k === 'address') elId = 'copy-address';
+                
+                const value = document.getElementById(elId).value.trim();
+                await savePageContent(k, value);
+            }
+
+            showToast('💾 Đồng bộ thành công', 'Đã cập nhật toàn bộ bài trí và thông tin hiển thị lên Supabase.', 'success');
+            await loadDatabaseDetails();
+            loadAdminData();
+            btn.disabled = false;
+            btn.textContent = 'Cập Nhật Đồng Bộ Nội Dung Giao Diện';
+        }
+
+        async function handleBlogSubmit(e) {
+            e.preventDefault();
+            const title = document.getElementById('blog-title').value.trim();
+            const category = document.getElementById('blog-category').value;
+            const thumbnail_url = document.getElementById('blog-image').value.trim();
+            const published_date = document.getElementById('blog-date').value.trim();
+            const brief = document.getElementById('blog-brief').value.trim();
+            const content = document.getElementById('blog-content').value.trim();
+
+            const payload = {
+                title, category, thumbnail_url, published_date, brief, content
+            };
+
+            const btn = document.getElementById('blog-submit-btn');
+            btn.disabled = true;
+            btn.textContent = 'Đang xuất bản bài viết...';
+
+            const response = await saveBlog(payload);
+            if (response.success) {
+                showToast('📰 Xuất bản thành công', 'Bài viết công nghệ của bạn đã được xuất bản lên tin tức.', 'success');
+                document.getElementById('admin-blog-form').reset();
+                await loadDatabaseDetails();
+                loadAdminData();
+            }
+            btn.disabled = false;
+            btn.textContent = 'Xuất Bản Bài Viết Lên Website';
+        }
+    </script>
+</body>
+</html>
