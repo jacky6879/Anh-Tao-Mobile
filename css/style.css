@@ -1562,3 +1562,256 @@ footer {
         height: 46px;
     }
 }
+
+.floating-theme-toggle {
+    background: var(--primary-gradient);
+    font-size: 1.25rem;
+}
+
+/* ==========================================
+-- LIGHT THEME SYSTEM OVERRIDES (Anh Táo Mobile)
+========================================== */
+body.light-theme {
+    --bg-base: #f4f5f8;
+    --bg-surface: #ffffff;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f7f9fa;
+    --text-primary: #121214;
+    --text-secondary: #5a5a66;
+    --text-muted: #8a8a99;
+    --border-glass: rgba(0, 0, 0, 0.08);
+    --shadow-premium: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme header {
+    background: rgba(244, 245, 248, 0.8) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme header.scrolled {
+    background: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme header .logo,
+body.light-theme aside.admin-sidebar .logo {
+    color: #121214;
+}
+
+body.light-theme .nav-link {
+    color: #5a5a66;
+}
+
+body.light-theme .nav-link:hover,
+body.light-theme .nav-link.active {
+    color: #121214;
+}
+
+body.light-theme footer {
+    background: #eef1f5 !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme footer .logo {
+    color: #121214;
+}
+
+body.light-theme footer h4 {
+    color: #121214 !important;
+}
+
+body.light-theme footer a,
+body.light-theme footer p,
+body.light-theme footer span {
+    color: #5a5a66 !important;
+}
+
+body.light-theme .footer-social-link {
+    background: rgba(0, 0, 0, 0.04);
+    color: #5a5a66 !important;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .footer-social-link:hover {
+    background: var(--primary);
+    color: #fff !important;
+}
+
+body.light-theme .product-title {
+    color: #121214;
+}
+
+body.light-theme .product-specs-brief .spec-pill {
+    background: rgba(0, 0, 0, 0.02);
+    color: #5a5a66;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .trust-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+}
+
+body.light-theme .trust-card h3 {
+    color: #121214;
+}
+
+body.light-theme .trust-card p {
+    color: #5a5a66;
+}
+
+body.light-theme .premium-card-form {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .form-control {
+    background: #f7f9fa !important;
+    color: #121214 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-theme .form-control:focus {
+    background: #ffffff !important;
+    border-color: var(--primary) !important;
+}
+
+body.light-theme .qc-step-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .qc-step-card:hover {
+    background: #f7f9fa;
+}
+
+body.light-theme .qc-step-card.active {
+    background: rgba(0, 240, 255, 0.03);
+    border-color: var(--accent-blue);
+}
+
+body.light-theme .qc-step-card .qc-step-title {
+    color: #121214;
+}
+
+body.light-theme .qc-step-card .qc-step-desc {
+    color: #5a5a66;
+}
+
+body.light-theme .compare-bar {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: var(--primary);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08), 0 0 20px rgba(255, 107, 0, 0.1);
+}
+
+body.light-theme .compare-item-bubble {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.06);
+    color: #5a5a66;
+}
+
+body.light-theme .modal-container {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .modal-title {
+    color: #121214;
+}
+
+body.light-theme .comparison-table th {
+    background: #f4f5f8;
+    color: #121214;
+}
+
+body.light-theme .comparison-product-name {
+    color: #121214;
+}
+
+body.light-theme .comparison-table td {
+    color: #5a5a66;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .comparison-table tr:hover td {
+    background: rgba(0, 0, 0, 0.01);
+}
+
+body.light-theme .comparison-feature-col {
+    color: #121214 !important;
+    font-weight: 700;
+}
+
+/* Light Theme for Admin Control Panel */
+body.light-theme .admin-sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .sidebar-btn {
+    color: #5a5a66;
+}
+
+body.light-theme .sidebar-btn:hover,
+body.light-theme .sidebar-btn.active {
+    background: rgba(255, 107, 0, 0.06);
+    color: var(--primary);
+}
+
+body.light-theme .kpi-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .kpi-num {
+    color: #121214;
+}
+
+body.light-theme .kpi-label {
+    color: #5a5a66;
+}
+
+body.light-theme .admin-table th {
+    background: #eef1f5;
+    color: #121214;
+}
+
+body.light-theme .admin-table td {
+    color: #5a5a66;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .admin-table tr:hover td {
+    background: rgba(0, 0, 0, 0.01);
+}
+
+body.light-theme .admin-panel h1,
+body.light-theme .admin-panel h3,
+body.light-theme .admin-panel h4 {
+    color: #121214;
+}
+
+body.light-theme .login-overlay {
+    background: #f4f5f8;
+}
+
+body.light-theme .login-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .login-card p {
+    color: #5a5a66 !important;
+}
+
+body.light-theme .login-card label,
+body.light-theme .admin-panel label {
+    color: #121214;
+}
+
+body.light-theme .logo span {
+    color: var(--primary) !important;
+}
+

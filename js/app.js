@@ -53,6 +53,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (document.getElementById('newsletter-form')) {
         initNewsHub();
     }
+
+    // 5. Initialize Theme Switcher
+    initThemeToggle();
 });
 
 // --- Dynamic Content Loader ---
@@ -85,26 +88,40 @@ function renderDynamicPageContent() {
     console.log("✏️ [DOM Update] Rendering dynamic store details from database...");
 
     // 1. Update Hotlines
-    const hotlineElements = document.querySelectorAll('[id*="hotline-text"], [class*="hotline"]');
+    const hotlineElements = document.querySelectorAll('[id*="hotline-text"], [class*="hotline"], p, span, a');
     hotlineElements.forEach(el => {
         if (el.tagName === 'A' && el.href.startsWith('tel:')) {
-            el.href = `tel:${content.hotline.replace(/\./g, '')}`;
+            el.href = `tel:${content.hotline.replace(/\s+/g, '').replace(/\./g, '')}`;
         }
         // If repair specific
         if (el.id === 'hotline-repair-text' && content.hotline_repair) {
             el.textContent = content.hotline_repair;
         } else {
-            el.innerHTML = el.innerHTML.replace(/1900\.6822/g, content.hotline);
+            if (el.children.length === 0 && (el.textContent.includes('1900.6822') || el.textContent.includes('08 1900 0011'))) {
+                el.textContent = el.textContent.replace(/1900\.6822/g, content.hotline);
+                el.textContent = el.textContent.replace(/08 1900 0011/g, content.hotline);
+            }
         }
     });
 
-    // 2. Update Shop Address (1013 CMT8, Thủ Dầu Một)
+    // 2. Update Shop Address (1013 CMT8, P. Thủ Dầu Một, Hồ Chí Minh) and Maps Link
+    // Target any link pointing to Google Maps and update dynamically
+    const addressLinks = document.querySelectorAll('a[href*="maps.app.goo.gl"], a[href*="maps.google.com"], a[href*="goo.gl/maps"]');
+    addressLinks.forEach(link => {
+        if (content.maps_url) {
+            link.href = content.maps_url;
+        }
+        link.textContent = content.address;
+    });
+
+    // Update other elements containing raw addresses ONLY if they don't have children tags (preserves inner HTML hyperlink layouts)
     const addressElements = document.querySelectorAll('p, span, div');
     addressElements.forEach(el => {
-        if (el.textContent.includes('123 Đường Cầu Giấy') || el.textContent.includes('1013 CMT8')) {
+        if (el.children.length === 0 && (el.textContent.includes('123 Đường Cầu Giấy') || el.textContent.includes('1013 CMT8'))) {
             el.textContent = el.textContent.replace(/123 Đường Cầu Giấy, Phường Quan Hoa, Quận Cầu Giấy, Hà Nội/g, content.address);
             el.textContent = el.textContent.replace(/123 Đường Cầu Giấy/g, content.address);
             el.textContent = el.textContent.replace(/1013 CMT8, Thủ Dầu Một, Bình Dương/g, content.address);
+            el.textContent = el.textContent.replace(/1013 CMT8, P\. Thủ Dầu Một, Hồ Chí Minh/g, content.address);
         }
     });
 
@@ -870,3 +887,71 @@ window.calculateRepairCost = calculateRepairCost;
 window.selectFormModel = selectFormModel;
 window.toggleComparison = toggleComparison;
 window.addToCart = addToCart;
+
+// --- Theme Toggle Manager ---
+function initThemeToggle() {
+    // 1. Check existing user preference or default to dark
+    const currentTheme = localStorage.getItem('vibemobile_theme') || 'dark';
+    if (currentTheme === 'light') {
+        document.body.classList.add('light-theme');
+    }
+
+    // 2. Create the floating button element
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'floating-btn floating-theme-toggle';
+    toggleBtn.id = 'theme-toggle-btn';
+    toggleBtn.setAttribute('aria-label', 'Chuyển đổi giao diện sáng/tối');
+    
+    // Set initial icon (sun for dark theme, moon for light theme)
+    toggleBtn.innerHTML = currentTheme === 'light' ? '🌙' : '☀️';
+    
+    // Position the floating button inside the floating widget group or absolute floating
+    const widgetGroup = document.querySelector('.floating-widget-group');
+    if (widgetGroup) {
+        // Prepend so it is at the top of the group
+        widgetGroup.prepend(toggleBtn);
+    } else {
+        // If not widget group (like on admin page), style it absolutely at the bottom right
+        toggleBtn.style.position = 'fixed';
+        toggleBtn.style.bottom = '20px';
+        toggleBtn.style.right = '20px';
+        toggleBtn.style.zIndex = '99999';
+        toggleBtn.style.width = '52px';
+        toggleBtn.style.height = '52px';
+        toggleBtn.style.borderRadius = '50%';
+        toggleBtn.style.background = 'var(--primary-gradient)';
+        toggleBtn.style.border = 'none';
+        toggleBtn.style.color = '#fff';
+        toggleBtn.style.fontSize = '1.3rem';
+        toggleBtn.style.cursor = 'pointer';
+        toggleBtn.style.display = 'flex';
+        toggleBtn.style.alignItems = 'center';
+        toggleBtn.style.justifyContent = 'center';
+        toggleBtn.style.boxShadow = 'var(--shadow-premium)';
+        toggleBtn.style.transition = 'var(--transition-bounce)';
+        
+        toggleBtn.addEventListener('mouseenter', () => {
+            toggleBtn.style.transform = 'scale(1.1) translateY(-3px)';
+        });
+        toggleBtn.addEventListener('mouseleave', () => {
+            toggleBtn.style.transform = 'none';
+        });
+        
+        document.body.appendChild(toggleBtn);
+    }
+
+    // 3. Add event listener to toggle theme
+    toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-theme');
+        const isLight = document.body.classList.contains('light-theme');
+        localStorage.setItem('vibemobile_theme', isLight ? 'light' : 'dark');
+        toggleBtn.innerHTML = isLight ? '🌙' : '☀️';
+        
+        showToast(
+            isLight ? '☀️ Giao diện Sáng' : '🌙 Giao diện Tối', 
+            `Đã chuyển sang chế độ nền ${isLight ? 'sáng' : 'tối'}.`, 
+            'success'
+        );
+    });
+}
+window.initThemeToggle = initThemeToggle;

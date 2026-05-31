@@ -137,10 +137,11 @@ INSERT INTO page_content (key, value) VALUES
 ('hero_title_1', 'iPhone 15 Pro Max'),
 ('hero_title_2', 'Likenew Như Mới'),
 ('hero_desc', 'Bản quốc tế zin áp suất, cam kết chưa qua sửa chữa. Kiểm định 15 bước khắt khe bởi chuyên gia kỹ thuật Anh Táo Mobile.'),
-('hotline', '1900.6822'),
+('hotline', '08 1900 0011'),
 ('hotline_repair', '0987.654.321'),
 ('email', 'support@anhtaomobile.vn'),
-('address', '1013 CMT8, Thủ Dầu Một, Bình Dương'),
+('address', '1013 CMT8, P. Thủ Dầu Một, Hồ Chí Minh'),
+('maps_url', 'https://maps.app.goo.gl/DExvRVg5SqceADN19'),
 ('footer_desc', 'Chuỗi hệ thống kiểm định điện thoại qua sử dụng số 1 Việt Nam. Đem những chiếc Flagship Like new tiệm cận sự hoàn hảo nhất đến tay khách hàng.');
 
 -- Seed Blogs (Tech Articles)

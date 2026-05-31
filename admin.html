@@ -439,9 +439,14 @@
 
             <!-- Tab C: Repairs Price Manager -->
             <section class="admin-panel" id="panel-repairs">
-                <div style="margin-bottom: 30px;">
-                    <h1 style="font-size: 1.8rem; font-weight:800;">Bảng giá Sửa chữa</h1>
-                    <p style="color:var(--text-secondary); font-size:0.9rem;">Cập nhật trực tiếp đơn giá dịch vụ kỹ thuật, thời gian làm và bảo hành tương ứng với dòng máy.</p>
+                <div style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h1 style="font-size: 1.8rem; font-weight:800;">Bảng giá Sửa chữa</h1>
+                        <p style="color:var(--text-secondary); font-size:0.9rem;">Cập nhật trực tiếp đơn giá dịch vụ kỹ thuật, thời gian làm và bảo hành tương ứng với dòng máy.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveAllRepairsHandler()" style="padding: 12px 24px; font-size: 0.9rem;">
+                        ⚡ Cập Nhật Toàn Bộ Bảng Giá Lên Website
+                    </button>
                 </div>
                 
                 <table class="admin-table">
@@ -506,6 +511,11 @@
                                 <label for="copy-address">Địa chỉ cơ sở cửa hàng chính</label>
                                 <input type="text" id="copy-address" class="form-control" required>
                             </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label for="copy-maps-url">Đường dẫn Google Maps (Địa chỉ bản đồ tăng uy tín)</label>
+                            <input type="url" id="copy-maps-url" class="form-control" placeholder="https://maps.app.goo.gl/..." required>
                         </div>
 
                         <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 15px; padding: 14px;" id="copy-submit-btn">Cập Nhật Đồng Bộ Nội Dung Giao Diện</button>
@@ -623,6 +633,12 @@
 
         // --- CRUD Loaders & UI Builders ---
         async function loadAdminData() {
+            // Fetch directly to prevent race conditions and ensure robust loading
+            state.products = await fetchProducts();
+            state.repairs = await fetchRepairs();
+            state.blogs = await fetchBlogs();
+            state.pageContent = await fetchPageContent();
+            
             // Load KPI counts
             document.getElementById('kpi-products').textContent = state.products.length;
             document.getElementById('kpi-repairs').textContent = state.repairs.length;
@@ -851,6 +867,49 @@
             }
         }
 
+        async function saveAllRepairsHandler() {
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '⌛ Đang cập nhật bảng giá...';
+            
+            let successCount = 0;
+            for (let r of state.repairs) {
+                const keySuffix = r.id !== 'undefined' && r.id ? r.id : r.device_model + '_' + r.service_type;
+                const priceInput = document.getElementById('rep-price-' + keySuffix);
+                const durInput = document.getElementById('rep-dur-' + keySuffix);
+                const warInput = document.getElementById('rep-war-' + keySuffix);
+                
+                if (priceInput && durInput && warInput) {
+                    const price = parseInt(priceInput.value);
+                    const duration = durInput.value.trim();
+                    const warranty = warInput.value.trim();
+                    
+                    const payload = {
+                        id: r.id !== 'undefined' && r.id ? parseInt(r.id) : null,
+                        device_model: r.device_model,
+                        service_type: r.service_type,
+                        service_name: r.service_name,
+                        price: price,
+                        duration: duration,
+                        warranty: warranty
+                    };
+                    
+                    const response = await saveRepair(payload);
+                    if (response.success) {
+                        successCount++;
+                    }
+                }
+            }
+            
+            showToast('⚡ Cập nhật bảng giá', `Đã đồng bộ thành công ${successCount}/${state.repairs.length} dịch vụ sửa chữa lên Website.`, 'success');
+            await loadDatabaseDetails();
+            loadAdminData();
+            
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+
         function renderAdminCopywriting() {
             const c = state.pageContent;
             if(!c) return;
@@ -862,6 +921,7 @@
             document.getElementById('copy-hotline-repair').value = c.hotline_repair;
             document.getElementById('copy-email').value = c.email;
             document.getElementById('copy-address').value = c.address;
+            document.getElementById('copy-maps-url').value = c.maps_url || 'https://maps.app.goo.gl/DExvRVg5SqceADN19';
         }
 
         async function handleContentSubmit(e) {
@@ -870,13 +930,14 @@
             btn.disabled = true;
             btn.textContent = 'Đang đồng bộ giao diện...';
 
-            const keys = ['hero_title_1', 'hero_title_2', 'hero_desc', 'hotline', 'hotline_repair', 'email', 'address'];
+            const keys = ['hero_title_1', 'hero_title_2', 'hero_desc', 'hotline', 'hotline_repair', 'email', 'address', 'maps_url'];
             
             for (let k of keys) {
                 let elId = 'copy-' + k.replace(/_/g, '-');
                 if (k === 'hero_desc') elId = 'copy-desc';
                 if (k === 'email') elId = 'copy-email';
                 if (k === 'address') elId = 'copy-address';
+                if (k === 'maps_url') elId = 'copy-maps-url';
                 
                 const value = document.getElementById(elId).value.trim();
                 await savePageContent(k, value);

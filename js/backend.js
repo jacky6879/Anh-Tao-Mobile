@@ -227,10 +227,11 @@ const PAGE_CONTENT_SEED = {
     hero_title_1: 'iPhone 15 Pro Max',
     hero_title_2: 'Likenew Như Mới',
     hero_desc: 'Bản quốc tế zin áp suất, cam kết chưa qua sửa chữa. Kiểm định 15 bước khắt khe bởi chuyên gia kỹ thuật Anh Táo Mobile.',
-    hotline: '1900.6822',
+    hotline: '08 1900 0011',
     hotline_repair: '0987.654.321',
     email: 'support@anhtaomobile.vn',
-    address: '1013 CMT8, Thủ Dầu Một, Bình Dương',
+    address: '1013 CMT8, P. Thủ Dầu Một, Hồ Chí Minh',
+    maps_url: 'https://maps.app.goo.gl/DExvRVg5SqceADN19',
     footer_desc: 'Chuỗi hệ thống kiểm định điện thoại qua sử dụng số 1 Việt Nam. Đem những chiếc Flagship Like new tiệm cận sự hoàn hảo nhất đến tay khách hàng.'
 };
 
@@ -278,9 +279,23 @@ function initLocalStorageBuffers() {
     if (!localStorage.getItem('vibemobile_repairs')) {
         localStorage.setItem('vibemobile_repairs', JSON.stringify(REPAIRS_SEED));
     }
-    if (!localStorage.getItem('vibemobile_content')) {
+    
+    // Dynamic page content initialization with robust merging to prevent undefined or old variables
+    const existingContent = JSON.parse(localStorage.getItem('vibemobile_content'));
+    if (!existingContent) {
         localStorage.setItem('vibemobile_content', JSON.stringify(PAGE_CONTENT_SEED));
+    } else {
+        // Safe merge with fallback seed values to ensure new properties like maps_url, updated hotline/address are populated
+        const mergedContent = { ...PAGE_CONTENT_SEED, ...existingContent };
+        // Force updated address, hotline, and maps link if they are legacy placeholders
+        if (!existingContent.maps_url || existingContent.address.includes('Bình Dương') || existingContent.address === 'undefined' || existingContent.hotline === '1900.6822') {
+            mergedContent.address = '1013 CMT8, P. Thủ Dầu Một, Hồ Chí Minh';
+            mergedContent.hotline = '08 1900 0011';
+            mergedContent.maps_url = 'https://maps.app.goo.gl/DExvRVg5SqceADN19';
+        }
+        localStorage.setItem('vibemobile_content', JSON.stringify(mergedContent));
     }
+    
     if (!localStorage.getItem('vibemobile_blogs')) {
         localStorage.setItem('vibemobile_blogs', JSON.stringify(BLOGS_SEED));
     }
