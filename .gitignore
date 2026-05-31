@@ -3,3 +3,5 @@ doc_content.txt
 .system_generated/
 *.log
 .claude/
+
+.vercel
