@@ -845,7 +845,7 @@ function renderNewsHub() {
 
         card.innerHTML = `
             <div style="height: 180px; overflow:hidden; position:relative;">
-                <img src="${blog.thumbnail_url}" style="width:100%; height:100%; object-fit:cover;">
+                <img src="${blog.thumbnail_url}" alt="${blog.title}" style="width:100%; height:100%; object-fit:cover;">
                 <span class="badge ${badgeColorClass}" style="position:absolute; top:12px; left:12px; z-index:2;">${blog.category}</span>
             </div>
             <div style="padding: 24px;">

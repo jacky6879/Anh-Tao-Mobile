@@ -1,0 +1,16 @@
+# Robots.txt for Anh Tao Mobile SEO optimization
+# Crawl guidelines for search engine crawlers (Googlebot, Bingbot, etc.)
+
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /iphone-cu.html
+Allow: /iphone-detail.html
+Allow: /sua-chua.html
+Allow: /tin-tuc.html
+
+# Block administrative panel indexing to increase security and prevent private crawl leaks
+Disallow: /admin.html
+
+# Reference Sitemap index location
+Sitemap: https://anh-tao-mobile.vercel.app/sitemap.xml
