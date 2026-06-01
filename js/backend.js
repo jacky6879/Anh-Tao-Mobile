@@ -574,6 +574,37 @@ async function saveRepair(row) {
     return { success: true, synced: dbSynced };
 }
 
+// Delete Repair Row
+async function deleteRepair(repairId) {
+    console.group("🚀 [CRUD Delete] Delete Repair ID:", repairId);
+    
+    // 1. Sync to local storage emulator buffer
+    const localRepairs = JSON.parse(localStorage.getItem('vibemobile_repairs')) || REPAIRS_SEED;
+    const updated = localRepairs.filter(r => r.id !== parseInt(repairId));
+    localStorage.setItem('vibemobile_repairs', JSON.stringify(updated));
+
+    let dbSynced = false;
+
+    // 2. Sync to live Supabase DB
+    if (supabase) {
+        try {
+            console.log("🔗 [Supabase DB] Deleting repair row...");
+            const { error } = await supabase
+                .from('repairs')
+                .delete()
+                .eq('id', parseInt(repairId));
+            
+            if (error) throw error;
+            dbSynced = true;
+            console.log("✓ [Supabase DB] Repair deleted successfully.");
+        } catch (err) {
+            console.warn("⚠️ [Supabase DB] Delete failed, using offline cache:", err.message);
+        }
+    }
+    console.groupEnd();
+    return { success: true, synced: dbSynced };
+}
+
 // Save Page Content Overwrite
 async function savePageContent(key, value) {
     console.group("🚀 [CRUD Write] Save Page Content Key:", key);

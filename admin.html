@@ -448,6 +448,55 @@
                         ⚡ Cập Nhật Toàn Bộ Bảng Giá Lên Website
                     </button>
                 </div>
+
+                <!-- ➕ Add New Repair Service Form (Enterprise Dynamic CRUD) -->
+                <div style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 20px; padding: 25px; margin-bottom: 35px;">
+                    <h3 style="font-size: 1.1rem; font-weight:700; margin-bottom: 15px; color:var(--primary);">➕ Thêm Dịch Vụ Sửa Chữa Mới</h3>
+                    <form id="admin-repair-form" onsubmit="handleRepairSubmit(event)">
+                        <div class="form-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="rep-add-model" style="font-size: 0.8rem; margin-bottom: 6px; display: block; color: var(--text-secondary);">Dòng máy *</label>
+                                <select id="rep-add-model" class="form-control" style="padding: 10px;" required>
+                                    <option value="ip15pm">iPhone 15 Pro Max</option>
+                                    <option value="ip14pm">iPhone 14 Pro Max</option>
+                                    <option value="ip13p">iPhone 13 Pro</option>
+                                    <option value="ip12pm">iPhone 12 Pro Max</option>
+                                    <option value="ip11pm">iPhone 11 Pro Max</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="rep-add-type" style="font-size: 0.8rem; margin-bottom: 6px; display: block; color: var(--text-secondary);">Loại linh kiện *</label>
+                                <select id="rep-add-type" class="form-control" style="padding: 10px;" required>
+                                    <option value="battery">Pin dung lượng cao</option>
+                                    <option value="screen">Màn hình hiển thị</option>
+                                    <option value="glass">Ép kính mặt trước</option>
+                                    <option value="faceid">Sửa Face ID</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="rep-add-name" style="font-size: 0.8rem; margin-bottom: 6px; display: block; color: var(--text-secondary);">Tên dịch vụ đầy đủ *</label>
+                                <input type="text" id="rep-add-name" class="form-control" placeholder="Thay Pin Dung Lượng Cao Pisen" style="padding: 10px;" required>
+                            </div>
+                        </div>
+                        <div class="form-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="rep-add-price" style="font-size: 0.8rem; margin-bottom: 6px; display: block; color: var(--text-secondary);">Đơn giá (VND) *</label>
+                                <input type="number" id="rep-add-price" class="form-control" placeholder="1200000" style="padding: 10px;" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="rep-add-duration" style="font-size: 0.8rem; margin-bottom: 6px; display: block; color: var(--text-secondary);">Thời gian sửa *</label>
+                                <input type="text" id="rep-add-duration" class="form-control" placeholder="30 phút" style="padding: 10px;" required>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="rep-add-warranty" style="font-size: 0.8rem; margin-bottom: 6px; display: block; color: var(--text-secondary);">Thời hạn bảo hành *</label>
+                                <input type="text" id="rep-add-warranty" class="form-control" placeholder="12 tháng" style="padding: 10px;" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px;" id="rep-add-submit-btn">
+                            Thêm dịch vụ vào bảng giá
+                        </button>
+                    </form>
+                </div>
                 
                 <table class="admin-table">
                     <thead>
@@ -457,7 +506,7 @@
                             <th>Đơn giá (VND)</th>
                             <th>Thời gian sửa</th>
                             <th>Bảo hành</th>
-                            <th>Lưu</th>
+                            <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody id="repairs-table-body">
@@ -813,15 +862,21 @@
         function renderAdminRepairs() {
             const tbody = document.getElementById('repairs-table-body');
             tbody.innerHTML = '';
+            
+            if (!state.repairs || state.repairs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding: 30px 0;">Bảng giá hiện tại trống. Vui lòng nhập dữ liệu mới ở khung phía trên!</td></tr>`;
+                return;
+            }
 
             state.repairs.forEach(r => {
                 const tr = document.createElement('tr');
                 
-                let modelText = 'iPhone 15 Pro Max';
-                if(r.device_model === 'ip14pm') modelText = 'iPhone 14 Pro Max';
-                if(r.device_model === 'ip13p') modelText = 'iPhone 13 Pro';
-                if(r.device_model === 'ip12pm') modelText = 'iPhone 12 Pro Max';
-                if(r.device_model === 'ip11pm') modelText = 'iPhone 11 Pro Max';
+                let modelText = r.device_model;
+                if(r.device_model === 'ip15pm') modelText = 'iPhone 15 Pro Max';
+                else if(r.device_model === 'ip14pm') modelText = 'iPhone 14 Pro Max';
+                else if(r.device_model === 'ip13p') modelText = 'iPhone 13 Pro';
+                else if(r.device_model === 'ip12pm') modelText = 'iPhone 12 Pro Max';
+                else if(r.device_model === 'ip11pm') modelText = 'iPhone 11 Pro Max';
 
                 tr.innerHTML = `
                     <td style="font-weight:700;">${modelText}</td>
@@ -836,11 +891,59 @@
                         <input type="text" class="form-control" id="rep-war-${r.id || r.device_model + '_' + r.service_type}" value="${r.warranty}" style="width:110px; padding:6px 10px;">
                     </td>
                     <td>
-                        <button class="action-btn action-edit" onclick="saveRepairRowHandler('${r.id}', '${r.device_model}', '${r.service_type}', '${r.service_name}')">Lưu</button>
+                        <div class="action-row">
+                            <button class="action-btn action-edit" onclick="saveRepairRowHandler('${r.id}', '${r.device_model}', '${r.service_type}', '${r.service_name}')">Lưu</button>
+                            <button class="action-btn action-delete" onclick="deleteRepairRowHandler('${r.id}', '${r.service_name}')">Xóa</button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        async function handleRepairSubmit(e) {
+            e.preventDefault();
+            const deviceModel = document.getElementById('rep-add-model').value;
+            const serviceType = document.getElementById('rep-add-type').value;
+            const serviceName = document.getElementById('rep-add-name').value.trim();
+            const price = parseInt(document.getElementById('rep-add-price').value);
+            const duration = document.getElementById('rep-add-duration').value.trim();
+            const warranty = document.getElementById('rep-add-warranty').value.trim();
+
+            const payload = {
+                id: null,
+                device_model: deviceModel,
+                service_type: serviceType,
+                service_name: serviceName,
+                price: price,
+                duration: duration,
+                warranty: warranty
+            };
+
+            const btn = document.getElementById('rep-add-submit-btn');
+            btn.disabled = true;
+            btn.textContent = 'Đang đồng bộ cơ sở dữ liệu...';
+
+            const response = await saveRepair(payload);
+            if(response.success) {
+                showToast('🛠️ Thêm thành công', `Đã thêm dịch vụ sửa chữa "${serviceName.split(' - ')[0]}" thành công.`, 'success');
+                document.getElementById('admin-repair-form').reset();
+                await loadDatabaseDetails();
+                loadAdminData();
+            }
+            btn.disabled = false;
+            btn.textContent = 'Thêm dịch vụ vào bảng giá';
+        }
+
+        async function deleteRepairRowHandler(id, serviceName) {
+            if(confirm(`Bạn có chắc chắn muốn xóa dịch vụ sửa chữa: "${serviceName}" khỏi website không?`)) {
+                const response = await deleteRepair(id);
+                if(response.success) {
+                    showToast('🗑️ Đã xóa thành công', `Dịch vụ "${serviceName.split(' - ')[0]}" đã được gỡ khỏi bảng giá.`, 'success');
+                    await loadDatabaseDetails();
+                    loadAdminData();
+                }
+            }
         }
 
         async function saveRepairRowHandler(id, deviceModel, serviceType, serviceName) {

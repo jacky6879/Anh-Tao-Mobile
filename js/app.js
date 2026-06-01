@@ -887,6 +887,7 @@ window.calculateRepairCost = calculateRepairCost;
 window.selectFormModel = selectFormModel;
 window.toggleComparison = toggleComparison;
 window.addToCart = addToCart;
+window.deleteRepair = deleteRepair;
 
 // --- Theme Toggle Manager ---
 function initThemeToggle() {
