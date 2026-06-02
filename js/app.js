@@ -17,45 +17,48 @@ const state = {
 };
 
 // Unified Application Bootloader
-document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Fetch live data from pipeline (Supabase or fallback local caches)
-    await loadDatabaseDetails();
-
-    // 2. Render dynamic landing page copy (Hotlines, addresses, email)
-    renderDynamicPageContent();
-
-    // 3. Initialize visual utilities
-    initScrollEffects();
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Initialize Visual & Interactive Utilities IMMEDIATELY
+    // This guarantees mobile navigation and themes respond instantly without waiting for network/Supabase queries
     initNavigation();
-
-    // 4. Conditional Module Initialization (Page-specific loaders)
-    if (document.querySelector('.hero-slides')) {
-        initHeroSlider();
-    }
-    if (document.getElementById('main-product-grid')) {
-        initCatalog();
-    }
-    if (document.getElementById('qc-flow-steps')) {
-        initQCSection();
-    }
-    if (document.getElementById('installment-form')) {
-        initInstallmentForm();
-    }
-    if (document.getElementById('compare-modal')) {
-        initCompareSystem();
-    }
-    if (document.getElementById('repair-phone-model')) {
-        initRepairEstimator();
-    }
-    if (document.getElementById('cu-grid')) {
-        initUsedCatalog();
-    }
-    if (document.getElementById('newsletter-form')) {
-        initNewsHub();
-    }
-
-    // 5. Initialize Theme Switcher
     initThemeToggle();
+    initScrollEffects();
+
+    // 2. Fetch live data from pipeline (Supabase or fallback local caches) and render page dynamically
+    (async () => {
+        try {
+            await loadDatabaseDetails();
+            renderDynamicPageContent();
+
+            // 3. Conditional Module Initialization (Page-specific loaders)
+            if (document.querySelector('.hero-slides')) {
+                initHeroSlider();
+            }
+            if (document.getElementById('main-product-grid')) {
+                initCatalog();
+            }
+            if (document.getElementById('qc-flow-steps')) {
+                initQCSection();
+            }
+            if (document.getElementById('installment-form')) {
+                initInstallmentForm();
+            }
+            if (document.getElementById('compare-modal')) {
+                initCompareSystem();
+            }
+            if (document.getElementById('repair-phone-model')) {
+                initRepairEstimator();
+            }
+            if (document.getElementById('cu-grid')) {
+                initUsedCatalog();
+            }
+            if (document.getElementById('newsletter-form')) {
+                initNewsHub();
+            }
+        } catch (err) {
+            console.error("❌ [Initialization] Dynamic page render failed:", err);
+        }
+    })();
 });
 
 // --- Dynamic Content Loader ---
@@ -185,6 +188,21 @@ function initNavigation() {
                 spans[1].style.opacity = '1';
                 spans[2].style.transform = 'none';
             }
+        });
+
+        // Close navigation drawer when clicking any link inside
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('open');
+                menuToggle.classList.remove('active');
+                
+                const spans = menuToggle.querySelectorAll('span');
+                if (spans.length >= 3) {
+                    spans[0].style.transform = 'none';
+                    spans[1].style.opacity = '1';
+                    spans[2].style.transform = 'none';
+                }
+            });
         });
     }
 }
@@ -888,6 +906,7 @@ window.selectFormModel = selectFormModel;
 window.toggleComparison = toggleComparison;
 window.addToCart = addToCart;
 window.deleteRepair = deleteRepair;
+window.showToast = showToast;
 
 // --- Theme Toggle Manager ---
 function initThemeToggle() {

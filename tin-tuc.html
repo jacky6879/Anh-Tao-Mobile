@@ -32,6 +32,11 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                     </svg>
                 </div>
+                <button class="menu-toggle" id="menu-mobile-btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </div>
     </header>
@@ -151,27 +156,9 @@
     <div class="toast-container" id="toast-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/backend.js"></script>
+    <script src="js/backend.js" defer></script>
+    <script src="js/app.js" defer></script>
     <script>
-        function showToast(title, desc, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `
-                <div class="toast-icon">${type === 'success' ? '✓' : 'ℹ️'}</div>
-                <div class="toast-body">
-                    <div class="toast-title">${title}</div>
-                    <div class="toast-desc">${desc}</div>
-                </div>
-            `;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 50);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 400);
-            }, 4000);
-        }
-
         async function handleNewsSubmit(e) {
             e.preventDefault();
             const email = document.getElementById('news-email').value.trim();
@@ -195,54 +182,6 @@
             } catch (err) {
                 showToast('❌ Lỗi kết nối', 'Không thể đăng ký lúc này. Vui lòng thử lại.', 'info');
             }
-        }
-
-        const ARTICLES = {
-            '1': {
-                title: '5 Mẹo chọn mua iPhone cũ nguyên bản, tránh xa hàng dựng',
-                content: `Mua iPhone cũ đã qua sử dụng luôn tiềm ẩn nhiều rủi ro. Dưới đây là 5 mẹo được đúc kết từ kĩ thuật viên trưởng tại Anh Táo Mobile giúp bạn dễ dàng chọn được máy nguyên bản chuẩn zin:\n\n` +
-                         `1. Kiểm tra ốc vít đáy và các cổng kết nối: Ốc đáy phải phẳng, các rãnh ốc sắc cạnh và chưa có dấu hiệu bị cọ sát nhiều bởi tua-vít.\n` +
-                         `2. Kiểm tra áp suất chống nước: Sử dụng phần mềm chuyên dụng đo sự chênh lệch áp suất khi bấm nhẹ lên màn hình. Máy zin nguyên bản luôn giữ áp suất tốt.\n` +
-                         `3. Soi màn hình hiển thị: Màn hình lô thường hiển thị ám xanh lục hoặc phản quang không đều. Hãy bật tính năng True Tone để xem màn có chính hãng không.\n` +
-                         `4. Rà soát chẩn đoán của hệ thống (Diagnostic Log): Vào mục Cài đặt -> Quyền riêng tư -> Phân tích để đọc log. Tránh xa các máy có chứa từ khóa 'Panic Full' hoặc 'Reset Peer' - đây là dấu hiệu phần cứng lỗi nặng.\n` +
-                         `5. Test cảm ứng & Điểm chết: Giữ một icon ứng dụng và di chuyển đều khắp màn hình để phát hiện xem có điểm nào bị liệt hay phản hồi kém không.`
-            },
-            '2': {
-                title: 'Đánh giá hiệu năng chơi game trên iPhone 15 Pro Max',
-                content: `Chiếc Flagship đầu bảng của Apple sở hữu chip A17 Pro (tiêu chuẩn 3nm đầu tiên thế giới). Cùng nhìn lại sức mạnh thực tế sau 6 tháng ra mắt:\n\n` +
-                         `- FPS mượt mà: Các tựa game FPS như PUBG Mobile hay Liên Quân luôn duy trì mức 60 - 120 FPS ổn định, mượt mà mà không hề giật lag.\n` +
-                         `- Nhiệt độ tối ưu: Sau các bản cập nhật iOS 17.4 trở lên, hiện tượng quá nhiệt đột ngột khi sạc đã được khắc phục hoàn chỉnh. Nhiệt độ tối đa khi chơi game nặng Genshin Impact duy trì khoảng 41 - 42.5 độ C.\n` +
-                         `- Thời lượng pin vượt mong đợi: Lõi pin dung lượng lớn kết hợp chip xử lý tiết kiệm điện năng cho phép chơi game liên tục lên tới 5.5 - 6 tiếng.`
-            },
-            '3': {
-                title: 'Quy trình ép kính iPhone tiêu chuẩn Class 100',
-                content: `Tại Anh Táo Mobile, quy trình ép kính thay kính vỡ iPhone được áp dụng theo quy chuẩn khép kín chống bụi mịn tuyệt đối:\n\n` +
-                         `Bước 1: Tháo dỡ cụm màn hình, tháo các gioăng đệm.\n` +
-                         `Bước 2: Sử dụng dây cắt thép siêu mịn để lọc bỏ lớp kính vỡ ra khỏi tấm nền hiển thị OLED dưới bàn nhiệt nhiệt độ ổn định.\n` +
-                         `Bước 3: Vệ sinh lớp keo LOCA cũ bằng hóa chất chuyên dụng tẩy keo không gây xước phim màn.\n` +
-                         `Bước 4: Sử dụng keo OCA cao cấp đặt kính mới, đưa vào buồng ép chân không tự động áp suất cao.\n` +
-                         `Bước 5: Cho màn hình vào buồng hấp khử bọt khí Autoclave trong vòng 10 phút để loại bỏ 100% bọt li ti.\n` +
-                         `Bước 6: Lắp đặt hoàn tất gioăng cao su kháng nước mới và kiểm tra lại cảm ứng.`
-            }
-        };
-
-        function readArticle(id) {
-            const art = ARTICLES[id];
-            if(!art) return;
-
-            const modal = document.createElement('div');
-            modal.className = 'modal show';
-            modal.id = 'art-modal';
-            modal.innerHTML = `
-                <div class="modal-container" style="max-width: 650px;">
-                    <button class="modal-close" onclick="document.getElementById('art-modal').remove()">✕</button>
-                    <div class="modal-body" style="line-height:1.7;">
-                        <h2 style="font-size: 1.5rem; font-weight:800; margin-bottom: 20px; color:var(--primary);">${art.title}</h2>
-                        <p style="white-space: pre-line; color:var(--text-secondary); font-size:0.95rem;">${art.content}</p>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
         }
     </script>
 </body>

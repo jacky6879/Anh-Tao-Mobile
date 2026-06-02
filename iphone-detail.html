@@ -216,7 +216,8 @@
     <div class="toast-container" id="toast-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/backend.js"></script>
+    <script src="js/backend.js" defer></script>
+    <script src="js/app.js" defer></script>
     <script>
         // Custom gallery logic
         function changeMainImage(src) {
@@ -226,32 +227,7 @@
             event.currentTarget.style.borderColor = 'var(--primary)';
         }
 
-        // Cart tracking
-        let cartCount = 0;
-        function addToCart(prodName) {
-            cartCount++;
-            document.getElementById('cart-counter-badge').textContent = cartCount;
-            showToast('🛒 Giỏ hàng cập nhật', `${prodName} đã được thêm vào giỏ hàng.`, 'success');
-        }
 
-        function showToast(title, desc, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `
-                <div class="toast-icon">${type === 'success' ? '✓' : 'ℹ️'}</div>
-                <div class="toast-body">
-                    <div class="toast-title">${title}</div>
-                    <div class="toast-desc">${desc}</div>
-                </div>
-            `;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 50);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 400);
-            }, 4000);
-        }
 
         // Submit form
         async function handleDirectSubmit(e) {

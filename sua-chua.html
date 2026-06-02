@@ -33,6 +33,11 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                 </div>
+                <button class="menu-toggle" id="menu-mobile-btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </div>
     </header>
@@ -158,92 +163,9 @@
     <div class="toast-container" id="toast-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/backend.js"></script>
+    <script src="js/backend.js" defer></script>
+    <script src="js/app.js" defer></script>
     <script>
-        // Repair cost matrix
-        const REPAIR_PRICES = {
-            ip15pm: {
-                battery: { price: 1490000, time: '35 phút', warranty: '12 tháng' },
-                screen: { price: 9290000, time: '40 phút', warranty: '06 tháng' },
-                glass: { price: 2190000, time: '50 phút', warranty: '12 tháng' },
-                faceid: { price: 1890000, time: '45 phút', warranty: '06 tháng' }
-            },
-            ip14pm: {
-                battery: { price: 1190000, time: '30 phút', warranty: '12 tháng' },
-                screen: { price: 7490000, time: '40 phút', warranty: '06 tháng' },
-                glass: { price: 1690000, time: '45 phút', warranty: '12 tháng' },
-                faceid: { price: 1490000, time: '45 phút', warranty: '06 tháng' }
-            },
-            ip13p: {
-                battery: { price: 950000, time: '30 phút', warranty: '12 tháng' },
-                screen: { price: 6200000, time: '30 phút', warranty: '06 tháng' },
-                glass: { price: 1190000, time: '40 phút', warranty: '12 tháng' },
-                faceid: { price: 1290000, time: '35 phút', warranty: '06 tháng' }
-            },
-            ip12pm: {
-                battery: { price: 790000, time: '30 phút', warranty: '12 tháng' },
-                screen: { price: 4290000, time: '30 phút', warranty: '06 tháng' },
-                glass: { price: 990000, time: '40 phút', warranty: '12 tháng' },
-                faceid: { price: 990000, time: '35 phút', warranty: '06 tháng' }
-            },
-            ip11pm: {
-                battery: { price: 650000, time: '25 phút', warranty: '12 tháng' },
-                screen: { price: 2900000, time: '30 phút', warranty: '06 tháng' },
-                glass: { price: 790000, time: '40 phút', warranty: '12 tháng' },
-                faceid: { price: 890000, time: '35 phút', warranty: '06 tháng' }
-            }
-        };
-
-        function calculateRepairCost() {
-            const model = document.getElementById('repair-phone-model').value;
-            const service = document.getElementById('repair-service-type').value;
-            const panel = document.getElementById('repair-result-panel');
-            
-            const info = REPAIR_PRICES[model][service];
-            const formatPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(info.price);
-
-            panel.innerHTML = `
-                <div style="background: rgba(0, 240, 255, 0.04); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 20px; padding: 24px; position:relative; overflow:hidden;">
-                    <div style="font-size: 0.8rem; color: var(--accent-blue); font-weight: 800; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 1px;">Ước tính chi phí</div>
-                    <div style="font-size: 2.2rem; font-weight: 800; color: var(--accent-blue); margin-bottom: 16px;">${formatPrice}</div>
-                    
-                    <div style="display:flex; flex-direction:column; gap:10px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 16px;">
-                        <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
-                            <span style="color:var(--text-secondary);">Thời gian xử lý:</span>
-                            <strong style="color:#fff;">${info.time} (Lấy ngay)</strong>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
-                            <span style="color:var(--text-secondary);">Thời hạn bảo hành linh kiện:</span>
-                            <strong style="color:#10B981;">${info.warranty} Lỗi 1 Đổi 1</strong>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
-                            <span style="color:var(--text-secondary);">Bảo hiểm linh kiện:</span>
-                            <span style="color:var(--text-muted);">Cam kết linh kiện zin bóc máy / Pisen nhập khẩu</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function showToast(title, desc, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `
-                <div class="toast-icon">${type === 'success' ? '✓' : 'ℹ️'}</div>
-                <div class="toast-body">
-                    <div class="toast-title">${title}</div>
-                    <div class="toast-desc">${desc}</div>
-                </div>
-            `;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 50);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 400);
-            }, 4000);
-        }
-
         async function handleRepairSubmit(e) {
             e.preventDefault();
             const name = document.getElementById('rep-name').value.trim();
@@ -265,12 +187,18 @@
                 return;
             }
 
+            const modelValue = modelSelect.value;
+            const serviceValue = serviceSelect.value;
+            // Lookup repair from state loaded dynamically in app.js
+            const record = state.repairs.find(r => r.device_model === modelValue && r.service_type === serviceValue);
+            const price = record ? record.price : 0;
+
             const payload = {
                 customerName: name,
                 phone: phone,
-                productId: 'repair_' + modelSelect.value,
+                productId: 'repair_' + modelValue,
                 productName: `Dịch vụ Sửa Chữa: ${modelName} - ${serviceName}`,
-                price: REPAIR_PRICES[modelSelect.value][serviceSelect.value].price,
+                price: price,
                 installmentTerm: `Đặt hẹn lúc: ${time.replace('T', ' ')}`,
                 monthlyPayment: 0
             };
@@ -285,9 +213,6 @@
                 showToast('❌ Lỗi kết nối', 'Không thể kết nối với CRM. Vui lòng thử lại.', 'info');
             }
         }
-
-        // Calculate once initially
-        calculateRepairCost();
     </script>
 </body>
 </html>
