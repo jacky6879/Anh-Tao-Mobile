@@ -1,0 +1,77 @@
+import { z } from "zod";
+
+export const productSchema = z.object({
+  title: z.string().min(2, "Tên sản phẩm quá ngắn"),
+  brand: z.string().optional(),
+  model: z.string().optional(),
+  storage: z.string().optional(),
+  color: z.string().optional(),
+  condition: z.enum([
+    "new_seal", "like_new", "percent99", "used",
+    "light_scratch", "repaired", "unknown",
+  ]),
+  batteryHealth: z.coerce.number().int().min(0).max(100).optional(),
+  warranty: z.string().optional(),
+  imeiStatus: z.string().optional(),
+  origin: z.string().optional(),
+  shortDescription: z.string().max(500).optional(),
+  longDescription: z.string().optional(),
+  coverImage: z.string().optional(),
+  gallery: z.array(z.string()).default([]),
+  categoryId: z.string().optional(),
+  tags: z.array(z.string()).default([]),
+  status: z.enum(["draft", "published", "archived"]),
+  featured: z.coerce.boolean().default(false),
+  price: z.coerce.number().int().min(0),
+  comparePrice: z.coerce.number().int().min(0).optional(),
+  stock: z.coerce.number().int().min(0).default(0),
+  installment: z.coerce.boolean().default(false),
+  metaTitle: z.string().optional(),
+  metaDescription: z.string().optional(),
+});
+
+export const repairServiceSchema = z.object({
+  title: z.string().min(2, "Tên dịch vụ quá ngắn"),
+  deviceBrand: z.string().optional(),
+  deviceModel: z.string().optional(),
+  serviceGroup: z.string().min(1),
+  serviceName: z.string().optional(),
+  partType: z.string().optional(),
+  partQuality: z.string().optional(),
+  priceMin: z.coerce.number().int().min(0),
+  priceMax: z.coerce.number().int().min(0),
+  warranty: z.string().optional(),
+  estimatedTime: z.string().optional(),
+  shortDescription: z.string().max(500).optional(),
+  longDescription: z.string().optional(),
+  coverImage: z.string().optional(),
+  tags: z.array(z.string()).default([]),
+  featured: z.coerce.boolean().default(false),
+  status: z.enum(["draft", "published", "archived"]),
+  metaTitle: z.string().optional(),
+  metaDescription: z.string().optional(),
+});
+
+export const categorySchema = z.object({
+  name: z.string().min(1, "Tên danh mục bắt buộc"),
+  slug: z.string().optional(),
+  description: z.string().optional(),
+  icon: z.string().optional(),
+  order: z.coerce.number().int().default(0),
+  parentId: z.string().optional(),
+});
+
+export const couponSchema = z.object({
+  code: z.string().min(2).max(40).optional(),
+  description: z.string().optional(),
+  type: z.enum(["percent", "fixed"]),
+  value: z.coerce.number().int().min(1),
+  minOrderAmount: z.coerce.number().int().min(0).optional(),
+  maxDiscount: z.coerce.number().int().min(0).optional(),
+  usageLimit: z.coerce.number().int().min(1).optional(),
+  perUserLimit: z.coerce.number().int().min(1).optional(),
+  productIds: z.array(z.string()).default([]),
+  startsAt: z.string().optional(),
+  expiresAt: z.string().optional(),
+  active: z.coerce.boolean().default(true),
+});
