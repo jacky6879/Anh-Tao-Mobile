@@ -78,15 +78,39 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           data={{
             "@context": "https://schema.org",
             "@type": "LocalBusiness",
+            "@id": `${env.NEXT_PUBLIC_SITE_URL}/#business`,
             name: env.NEXT_PUBLIC_BUSINESS_NAME,
             url: env.NEXT_PUBLIC_SITE_URL,
             email: env.NEXT_PUBLIC_CONTACT_EMAIL,
             telephone: env.NEXT_PUBLIC_HOTLINE,
+            image: `${env.NEXT_PUBLIC_SITE_URL}/opengraph-image`,
+            priceRange: "1.000.000₫ - 30.000.000₫",
+            description: "Chuyên iPhone, iPad, MacBook cũ/mới và sửa chữa thay linh kiện lấy liền tại Bình Dương. BH pin 60 tháng, main 12 tháng 1 đổi 1.",
             address: {
               "@type": "PostalAddress",
-              addressLocality: env.NEXT_PUBLIC_BUSINESS_ADDRESS,
+              streetAddress: "1013 Cách Mạng Tháng 8",
+              addressLocality: "Thủ Dầu Một",
+              addressRegion: "Bình Dương",
               addressCountry: "VN",
             },
+            geo: {
+              "@type": "GeoCoordinates",
+              latitude: 10.9804,
+              longitude: 106.6519,
+            },
+            openingHoursSpecification: [
+              {
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                opens: "08:30",
+                closes: "21:00",
+              },
+            ],
+            sameAs: [
+              "https://www.facebook.com/anhtaobinhduongg",
+              "https://www.tiktok.com/@anhtaoiphonebd",
+              "https://zalo.me/0819000011",
+            ],
           }}
         />
         <div className="min-h-screen flex flex-col surface-page">

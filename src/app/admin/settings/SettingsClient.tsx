@@ -35,8 +35,8 @@ export function SettingsClient({ defaultValues }: { defaultValues: Record<string
       {/* ===== Thông tin liên hệ ===== */}
       <div className="flex flex-col gap-4 border-t border-[var(--border)] pt-6">
         <h3 className="font-semibold text-lg">📞 Thông tin liên hệ</h3>
-        <SettingField label="Hotline" settingKey="hotline" value={data.hotline} onChange={handleChange} placeholder="0900000000" />
-        <SettingField label="Zalo" settingKey="zalo" value={data.zalo} onChange={handleChange} placeholder="0900000000" />
+        <SettingField label="Hotline" settingKey="hotline" value={data.hotline} onChange={handleChange} placeholder="0819000011" />
+        <SettingField label="Zalo" settingKey="zalo" value={data.zalo} onChange={handleChange} placeholder="0819000011" />
         <SettingField label="Messenger (Link)" settingKey="messenger" value={data.messenger} onChange={handleChange} placeholder="https://m.me/..." />
         <SettingField label="Địa chỉ" settingKey="address" value={data.address} onChange={handleChange} placeholder="Bình Dương..." />
         <SettingField label="Google Maps Embed URL" settingKey="googleMapsUrl" value={data.googleMapsUrl} onChange={handleChange} placeholder="https://www.google.com/maps/embed?..." />

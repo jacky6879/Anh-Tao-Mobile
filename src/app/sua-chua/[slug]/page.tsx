@@ -33,7 +33,7 @@ export default async function ServiceDetailPage({ params }: Params) {
         "@context": "https://schema.org", "@type": "Service",
         name: service.title, serviceType: service.serviceGroup,
         provider: { "@type": "LocalBusiness", name: env.NEXT_PUBLIC_BUSINESS_NAME },
-        areaServed: "Bình Dương, Việt Nam",
+        areaServed: "Thủ Dầu Một, Bình Dương",
         offers: { "@type": "Offer", priceCurrency: "VND", price: service.priceMin, priceSpecification: { "@type": "PriceRange", minPrice: service.priceMin, maxPrice: service.priceMax } },
       }} />
 

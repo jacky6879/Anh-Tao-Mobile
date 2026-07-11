@@ -13,10 +13,10 @@ export const getSiteSettings = unstable_cache(
     
     // Provide default fallbacks from env if not set in DB
     return {
-      hotline: map.hotline || env.NEXT_PUBLIC_HOTLINE || "0900000000",
-      zalo: map.zalo || env.NEXT_PUBLIC_ZALO || "0900000000",
-      messenger: map.messenger || env.NEXT_PUBLIC_MESSENGER || "https://m.me/",
-      address: map.address || env.NEXT_PUBLIC_BUSINESS_ADDRESS || "Bình Dương, Việt Nam",
+      hotline: map.hotline || env.NEXT_PUBLIC_HOTLINE || "0819000011",
+      zalo: map.zalo || env.NEXT_PUBLIC_ZALO || "0819000011",
+      messenger: map.messenger || env.NEXT_PUBLIC_MESSENGER || "https://m.me/anhtaobinhduongg",
+      address: map.address || env.NEXT_PUBLIC_BUSINESS_ADDRESS || "1013 Cách Mạng Tháng 8, P. Phú Cường, TP. Thủ Dầu Một, Bình Dương",
       heroTitle: map.heroTitle || "Anh Táo Mobile - Uy Tín Tạo Niềm Tin",
       heroSubtitle: map.heroSubtitle || "Chuyên mua bán, sửa chữa các dòng iPhone, iPad, MacBook chính hãng với giá tốt nhất Bình Dương.",
     };
