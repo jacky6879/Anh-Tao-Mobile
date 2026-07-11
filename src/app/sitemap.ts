@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/db";
-import { env } from "@/lib/env";
+
+const SITE_URL = "https://anhtaomobile.com";
 
 const STATIC = [
   "", "san-pham", "sua-chua", "thu-cu-doi-moi", "tra-gop", "bao-hanh",
@@ -10,7 +11,7 @@ const STATIC = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = env.NEXT_PUBLIC_SITE_URL;
+  const base = SITE_URL;
 
   const staticEntries: MetadataRoute.Sitemap = STATIC.map((p) => ({
     url: `${base}/${p}`,

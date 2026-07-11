@@ -63,7 +63,7 @@ const envSchema = z.object({
   CRON_SECRET: z.string().default(""),
 
   // Branding
-  NEXT_PUBLIC_SITE_URL: z.string().url().default("https://anhtaomobile.vn"),
+  NEXT_PUBLIC_SITE_URL: z.string().url().default("https://anhtaomobile.com"),
   NEXT_PUBLIC_SITE_NAME: z.string().default("Anh Táo Mobile"),
   NEXT_PUBLIC_CONTACT_EMAIL: z.string().default("support@anhtaomobile.vn"),
   NEXT_PUBLIC_BUSINESS_NAME: z.string().default("Anh Táo Mobile"),
@@ -87,7 +87,7 @@ const envSchema = z.object({
 function parseEnv() {
   if (typeof window !== "undefined") {
     return {
-      NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "https://anhtaomobile.vn",
+      NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || "https://anhtaomobile.com",
       NEXT_PUBLIC_BUSINESS_NAME: process.env.NEXT_PUBLIC_BUSINESS_NAME || "Anh Táo Mobile",
       NEXT_PUBLIC_CONTACT_EMAIL: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "support@anhtaomobile.vn",
       NEXT_PUBLIC_BUSINESS_TAX_ID: process.env.NEXT_PUBLIC_BUSINESS_TAX_ID || "",
