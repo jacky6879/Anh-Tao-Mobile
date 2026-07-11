@@ -68,13 +68,18 @@ const envSchema = z.object({
   NEXT_PUBLIC_CONTACT_EMAIL: z.string().default("support@anhtaomobile.vn"),
   NEXT_PUBLIC_BUSINESS_NAME: z.string().default("Anh Táo Mobile"),
   NEXT_PUBLIC_BUSINESS_TAX_ID: z.string().default(""),
-  NEXT_PUBLIC_BUSINESS_ADDRESS: z.string().default("1013 Cách Mạng Tháng 8, P. Phú Cường, TP. Thủ Dầu Một, Bình Dương"),
-  NEXT_PUBLIC_HOTLINE: z.string().default("0819000011"),
-  NEXT_PUBLIC_ZALO: z.string().default("0819000011"),
+  NEXT_PUBLIC_BUSINESS_ADDRESS: z.string().default("1013, Cách Mạng Tháng 8, Thủ Dầu Một, Hồ Chí Minh"),
+  NEXT_PUBLIC_HOTLINE: z.string().default("08 1900 0011"),
+  NEXT_PUBLIC_ZALO: z.string().default("08 1900 0011"),
   NEXT_PUBLIC_MESSENGER: z.string().default("https://m.me/anhtaobinhduongg"),
   NEXT_PUBLIC_MAPS_URL: z
     .string()
     .default("https://maps.google.com/?q=Anh+Tao+Mobile+1013+CMT8+Thu+Dau+Mot+Binh+Duong"),
+
+  // Tracking & SEO
+  NEXT_PUBLIC_GA_ID: z.string().default(""),
+  NEXT_PUBLIC_FB_PIXEL_ID: z.string().default(""),
+  NEXT_PUBLIC_GSC_VERIFICATION: z.string().default(""),
 
   NODE_ENV: z.string().default("development"),
 });
@@ -86,11 +91,14 @@ function parseEnv() {
       NEXT_PUBLIC_BUSINESS_NAME: process.env.NEXT_PUBLIC_BUSINESS_NAME || "Anh Táo Mobile",
       NEXT_PUBLIC_CONTACT_EMAIL: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "support@anhtaomobile.vn",
       NEXT_PUBLIC_BUSINESS_TAX_ID: process.env.NEXT_PUBLIC_BUSINESS_TAX_ID || "",
-      NEXT_PUBLIC_BUSINESS_ADDRESS: process.env.NEXT_PUBLIC_BUSINESS_ADDRESS || "1013 Cách Mạng Tháng 8, P. Phú Cường, TP. Thủ Dầu Một, Bình Dương",
-      NEXT_PUBLIC_HOTLINE: process.env.NEXT_PUBLIC_HOTLINE || "0819000011",
-      NEXT_PUBLIC_ZALO: process.env.NEXT_PUBLIC_ZALO || "0819000011",
+      NEXT_PUBLIC_BUSINESS_ADDRESS: process.env.NEXT_PUBLIC_BUSINESS_ADDRESS || "1013, Cách Mạng Tháng 8, Thủ Dầu Một, Hồ Chí Minh",
+      NEXT_PUBLIC_HOTLINE: process.env.NEXT_PUBLIC_HOTLINE || "08 1900 0011",
+      NEXT_PUBLIC_ZALO: process.env.NEXT_PUBLIC_ZALO || "08 1900 0011",
       NEXT_PUBLIC_MESSENGER: process.env.NEXT_PUBLIC_MESSENGER || "https://m.me/anhtaobinhduongg",
       NEXT_PUBLIC_MAPS_URL: process.env.NEXT_PUBLIC_MAPS_URL || "https://maps.google.com/?q=Anh+Tao+Mobile+1013+CMT8+Thu+Dau+Mot+Binh+Duong",
+      NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID || "",
+      NEXT_PUBLIC_FB_PIXEL_ID: process.env.NEXT_PUBLIC_FB_PIXEL_ID || "",
+      NEXT_PUBLIC_GSC_VERIFICATION: process.env.NEXT_PUBLIC_GSC_VERIFICATION || "",
       NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || "",
       NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN || "",
       ADMIN_EMAILS: "",

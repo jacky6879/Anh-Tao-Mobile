@@ -7,11 +7,15 @@ import { CONDITION_LABELS } from "@/lib/format";
 
 const CONDITIONS = ["new_seal", "like_new", "percent99", "used", "light_scratch"];
 
-export const metadata = {
-  title: "Sản phẩm — iPhone, iPad, MacBook, smartphone",
-  description: "Danh sách điện thoại, iPad, MacBook cũ/mới tại Anh Táo Mobile. Máy đẹp, kiểm tra kỹ, bảo hành rõ ràng.",
-  alternates: { canonical: "/san-pham" },
-};
+export async function generateMetadata({ searchParams }: { searchParams: Promise<Search> }) {
+  const sp = await searchParams;
+  const page = sp.page ? `?page=${sp.page}` : "";
+  return {
+    title: "Sản phẩm — iPhone, iPad, MacBook, smartphone",
+    description: "Danh sách điện thoại, iPad, MacBook cũ/mới tại Anh Táo Mobile. Máy đẹp, kiểm tra kỹ, bảo hành rõ ràng.",
+    alternates: { canonical: `/san-pham${page}` },
+  };
+}
 
 type Search = {
   q?: string; category?: string; brand?: string; condition?: string;

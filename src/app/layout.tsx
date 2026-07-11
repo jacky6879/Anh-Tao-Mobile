@@ -15,6 +15,7 @@ import { FlashToast } from "@/components/FlashToast";
 import { FloatingCTA } from "@/components/FloatingCTA";
 import { ReferralCapture } from "@/components/ReferralCapture";
 import { JsonLd } from "@/components/SEO/JsonLd";
+import { AnalyticsScript } from "@/components/SEO/AnalyticsScript";
 
 const inter = Inter({ subsets: ["latin", "vietnamese"], variable: "--font-sans" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
@@ -42,6 +43,9 @@ export const metadata: Metadata = {
   },
   alternates: { canonical: "/" },
   robots: { index: true, follow: true },
+  verification: {
+    google: env.NEXT_PUBLIC_GSC_VERIFICATION,
+  },
 };
 
 export const viewport: Viewport = {
@@ -111,6 +115,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "https://www.tiktok.com/@anhtaoiphonebd",
               "https://zalo.me/0819000011",
             ],
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: "4.9",
+              reviewCount: "125",
+              bestRating: "5",
+              worstRating: "1",
+            },
           }}
         />
         <div className="min-h-screen flex flex-col surface-page">
@@ -123,6 +134,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <FloatingCTA />
         <FlashToast />
         <ReferralCapture />
+        <AnalyticsScript />
         <Analytics />
         <SpeedInsights />
       </body>

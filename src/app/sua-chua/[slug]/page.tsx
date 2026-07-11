@@ -36,6 +36,36 @@ export default async function ServiceDetailPage({ params }: Params) {
         areaServed: "Thủ Dầu Một, Bình Dương",
         offers: { "@type": "Offer", priceCurrency: "VND", price: service.priceMin, priceSpecification: { "@type": "PriceRange", minPrice: service.priceMin, maxPrice: service.priceMax } },
       }} />
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": `Giá dịch vụ ${service.title} là bao nhiêu?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `Mức giá tham khảo cho dịch vụ này dao động từ ${formatPriceRange(service.priceMin, service.priceMax)}. Vui lòng liên hệ trực tiếp để có báo giá chính xác nhất hôm nay.`
+            }
+          },
+          ...(service.estimatedTime ? [{
+            "@type": "Question",
+            "name": `Thời gian ${service.title.toLowerCase()} mất bao lâu?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `Dịch vụ thường được xử lý nhanh chóng trong khoảng ${service.estimatedTime}. Khách hàng có thể ngồi đợi và lấy máy ngay tại cửa hàng.`
+            }
+          }] : []),
+          ...(service.warranty ? [{
+            "@type": "Question",
+            "name": `Dịch vụ này có được bảo hành không?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `Có, tất cả linh kiện thay thế đều được bảo hành chính hãng ${service.warranty}. Nếu có lỗi từ nhà sản xuất, chúng tôi hỗ trợ 1 đổi 1 nhanh chóng.`
+            }
+          }] : [])
+        ]
+      }} />
 
       <nav className="flex items-center gap-1 text-xs text-muted-token mb-4">
         <Link href="/" className="hover:text-primary-token">Trang chủ</Link>

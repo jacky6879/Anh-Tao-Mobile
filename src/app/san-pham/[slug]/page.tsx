@@ -64,6 +64,9 @@ export default async function ProductDetailPage({ params }: Params) {
             price: product.price,
             priceCurrency: "VND",
             availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            itemCondition: product.condition === "new_seal" 
+              ? "https://schema.org/NewCondition" 
+              : "https://schema.org/UsedCondition",
           },
           aggregateRating: product.ratingCount
             ? { "@type": "AggregateRating", ratingValue: product.ratingAvg ?? 0, reviewCount: product.ratingCount }
