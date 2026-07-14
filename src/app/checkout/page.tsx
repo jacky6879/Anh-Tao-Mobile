@@ -4,6 +4,9 @@ import { getCart } from "@/lib/cart";
 import { formatVND } from "@/lib/format";
 import { CheckoutForm } from "@/components/CheckoutForm";
 
+// Interactive, cart/session-based; render per request
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "Thanh toán / Đặt giữ máy", robots: { index: false } };
 
 export default async function CheckoutPage() {

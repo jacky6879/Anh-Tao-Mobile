@@ -8,6 +8,9 @@ import { JsonLd } from "@/components/SEO/JsonLd";
 import { formatPriceRange } from "@/lib/format";
 import { env } from "@/lib/env";
 
+// DB-backed content; render per request (DB not available at build time on Vercel)
+export const dynamic = "force-dynamic";
+
 const repairIcons: Record<string, string> = {
   "Thay pin": "🔋", "Thay màn hình": "📱", "Ép kính": "🪟", "Chân sạc": "🔌",
   Camera: "📷", "Loa / Mic": "🔊", "Face ID": "🙂", Mainboard: "🧩",

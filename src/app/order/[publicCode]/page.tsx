@@ -4,6 +4,9 @@ import { formatVND, formatDateTime } from "@/lib/format";
 
 export const metadata = { title: "Tra cứu đơn hàng", robots: { index: false } };
 
+// Order-specific, DB-backed; render per request
+export const dynamic = "force-dynamic";
+
 type Params = { params: Promise<{ publicCode: string }> };
 
 const STATUS_LABEL: Record<string, { label: string; cls: string }> = {

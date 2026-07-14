@@ -5,9 +5,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import "./globals.css";
 
-// Force dynamic rendering — DB is not available at build time on Vercel
-export const dynamic = "force-dynamic";
-
 import { env } from "@/lib/env";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -94,7 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@type": "PostalAddress",
               streetAddress: "1013 Cách Mạng Tháng 8",
               addressLocality: "Thủ Dầu Một",
-              addressRegion: "Bình Dương",
+              addressRegion: "Hồ Chí Minh",
               addressCountry: "VN",
             },
             geo: {
@@ -106,7 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {
                 "@type": "OpeningHoursSpecification",
                 dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-                opens: "08:30",
+                opens: "09:00",
                 closes: "21:00",
               },
             ],
@@ -115,13 +112,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "https://www.tiktok.com/@anhtaoiphonebd",
               "https://zalo.me/0819000011",
             ],
-            aggregateRating: {
-              "@type": "AggregateRating",
-              ratingValue: "4.9",
-              reviewCount: "125",
-              bestRating: "5",
-              worstRating: "1",
-            },
           }}
         />
         <div className="min-h-screen flex flex-col surface-page">

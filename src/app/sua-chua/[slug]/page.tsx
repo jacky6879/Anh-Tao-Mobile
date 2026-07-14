@@ -7,6 +7,9 @@ import { formatPriceRange } from "@/lib/format";
 import { Markdown } from "@/lib/markdown";
 import { JsonLd } from "@/components/SEO/JsonLd";
 
+// ISR: cache rendered service pages, revalidate every 5 minutes
+export const revalidate = 300;
+
 type Params = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Params) {

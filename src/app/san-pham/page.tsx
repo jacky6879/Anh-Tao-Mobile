@@ -5,6 +5,9 @@ import { ProductCard } from "@/components/ProductCard";
 import { EmptyState } from "@/components/EmptyState";
 import { CONDITION_LABELS } from "@/lib/format";
 
+// DB-backed content + searchParams; render per request
+export const dynamic = "force-dynamic";
+
 const CONDITIONS = ["new_seal", "like_new", "percent99", "used", "light_scratch"];
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<Search> }) {

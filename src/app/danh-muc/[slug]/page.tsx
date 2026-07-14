@@ -3,6 +3,9 @@ import { prisma } from "@/lib/db";
 import { ProductCard } from "@/components/ProductCard";
 import { EmptyState } from "@/components/EmptyState";
 
+// ISR: cache rendered category pages, revalidate every 5 minutes
+export const revalidate = 300;
+
 type Params = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Params) {

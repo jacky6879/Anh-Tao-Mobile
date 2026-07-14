@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/db";
 import { BookingForm } from "@/components/BookingForm";
 
+// DB-backed content; render per request (DB not available at build time on Vercel)
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Đặt lịch sửa chữa iPhone, iPad tại Bình Dương",
   description: "Đặt lịch sửa chữa điện thoại tại Anh Táo Mobile — thay pin, thay màn hình, ép kính. Nhân viên liên hệ xác nhận trong 30 phút.",

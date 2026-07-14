@@ -23,12 +23,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let productEntries: MetadataRoute.Sitemap = [];
   let serviceEntries: MetadataRoute.Sitemap = [];
   let categoryEntries: MetadataRoute.Sitemap = [];
+  let blogEntries: MetadataRoute.Sitemap = [];
 
   try {
-    const [products, services, categories] = await Promise.all([
+    const [products, services, categories, posts] = await Promise.all([
       prisma.product.findMany({ where: { status: "published", deletedAt: null }, select: { slug: true, updatedAt: true } }),
       prisma.repairService.findMany({ where: { status: "published", deletedAt: null }, select: { slug: true, updatedAt: true } }),
       prisma.category.findMany({ where: { deletedAt: null }, select: { slug: true } }),
+      prisma.seoPage.findMany({ where: { published: true }, select: { slug: true, updatedAt: true } }),
     ]);
     productEntries = products.map((p) => ({
       url: `${base}/san-pham/${p.slug}`,
@@ -48,9 +50,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.6,
     }));
+    blogEntries = posts.map((p) => ({
+      url: `${base}/blog/${p.slug}`,
+      lastModified: p.updatedAt,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    }));
   } catch {
     // DB unavailable.
   }
 
-  return [...staticEntries, ...productEntries, ...serviceEntries, ...categoryEntries];
+  return [...staticEntries, ...productEntries, ...serviceEntries, ...categoryEntries, ...blogEntries];
 }

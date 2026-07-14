@@ -3,6 +3,9 @@ import { prisma } from "@/lib/db";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 
+// DB-backed content; render per request (DB not available at build time on Vercel)
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Blog - Tin tức và Thủ thuật",
   description: "Tổng hợp các bài viết mới nhất về công nghệ, đánh giá sản phẩm và mẹo hay.",

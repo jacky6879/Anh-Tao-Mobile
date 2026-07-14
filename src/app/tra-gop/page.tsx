@@ -2,6 +2,9 @@ import { SeoLanding } from "@/components/SeoLanding";
 import { prisma } from "@/lib/db";
 import { InstallmentCalculator } from "@/components/InstallmentCalculator";
 
+// DB-backed content; render per request (DB not available at build time on Vercel)
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "Trả góp iPhone, iPad, MacBook", description: "Hỗ trợ trả góp iPhone, iPad, MacBook qua ngân hàng và công ty tài chính. Tư vấn hồ sơ nhanh.", alternates: { canonical: "/tra-gop" } };
 
 export default async function Page() {

@@ -2,6 +2,9 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { RepairListClient } from "./RepairListClient";
 
+// DB-backed content; render per request (DB not available at build time on Vercel)
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Sửa chữa iPhone, iPad — thay pin, màn hình, ép kính lấy liền",
   description: "Dịch vụ sửa chữa điện thoại tại Anh Táo Mobile: thay pin, thay màn hình, ép kính, thay chân sạc, sửa main — lấy liền, bảo hành rõ ràng.",

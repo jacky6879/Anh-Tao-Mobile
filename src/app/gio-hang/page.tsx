@@ -5,6 +5,9 @@ import { formatVND } from "@/lib/format";
 import { CartClient } from "@/components/CartClient";
 import { EmptyState } from "@/components/EmptyState";
 
+// Interactive, cart/session-based; render per request
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "Giỏ hàng", alternates: { canonical: "/gio-hang" } };
 
 export default async function CartPage() {

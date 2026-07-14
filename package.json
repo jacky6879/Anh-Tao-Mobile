@@ -14,6 +14,8 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:seed": "tsx -r dotenv/config prisma/seed.ts",
+    "db:seed:blog": "tsx -r dotenv/config prisma/seed-blog.ts",
+    "db:seed:blog:2": "tsx -r dotenv/config prisma/seed-blog-2.ts",
     "db:studio": "prisma studio",
     "test:e2e": "playwright test",
     "email:dev": "email dev --dir ./src/emails"

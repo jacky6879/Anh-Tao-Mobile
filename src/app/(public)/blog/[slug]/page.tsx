@@ -3,6 +3,9 @@ import { prisma } from "@/lib/db";
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
 
+// ISR: cache rendered blog posts, revalidate every 5 minutes
+export const revalidate = 300;
+
 type PageProps = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: PageProps) {

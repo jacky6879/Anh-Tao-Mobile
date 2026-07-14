@@ -5,6 +5,9 @@ import { buildSepayQrUrl } from "@/lib/orders";
 import { env } from "@/lib/env";
 import { CheckCircle2 } from "lucide-react";
 
+// Order-specific, DB-backed; render per request
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "Đặt hàng thành công", robots: { index: false } };
 
 type Search = { searchParams: Promise<{ order?: string }> };
