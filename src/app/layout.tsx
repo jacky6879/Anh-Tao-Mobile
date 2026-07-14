@@ -90,7 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             address: {
               "@type": "PostalAddress",
               streetAddress: "1013 Cách Mạng Tháng 8",
-              addressLocality: "Thủ Dầu Một",
+              addressLocality: "Phường Thủ Dầu Một",
               addressRegion: "Hồ Chí Minh",
               addressCountry: "VN",
             },

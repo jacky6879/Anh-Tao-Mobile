@@ -200,8 +200,8 @@ Ngày: 13/07/2026
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "1013 Cách Mạng Tháng 8",
-          "addressLocality": "Thủ Dầu Một",
-          "addressRegion": "Bình Dương",
+          "addressLocality": "Phường Thủ Dầu Một",
+          "addressRegion": "Hồ Chí Minh",
           "addressCountry": "VN"
         },
         "telephone": "0819000011"
