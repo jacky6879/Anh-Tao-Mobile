@@ -443,6 +443,24 @@ model Review {
   @@index([productId, status])
 }
 
+// ===== HOMEPAGE TESTIMONIALS (customer photos + comments) =====
+model Testimonial {
+  id           String       @id @default(cuid())
+  customerName String
+  avatarImage  String?
+  photoImage   String?
+  productName  String?
+  comment      String       @db.Text
+  rating       Int          @default(5)
+  status       ReviewStatus @default(published)
+  featured     Boolean      @default(false)
+  order        Int          @default(0)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([status, order, createdAt])
+}
+
 // ===== REFERRAL =====
 model Referral {
   id           String         @id @default(cuid())

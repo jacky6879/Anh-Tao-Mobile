@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Package, Tags, Wrench, CalendarClock, RefreshCw,
-  ShoppingCart, Users, Star, Ticket, Share2, FileText, ShieldCheck, Menu, X, Settings, FileEdit
+  ShoppingCart, Users, Star, Ticket, Share2, FileText, ShieldCheck, Menu, X, Settings, FileEdit, MessageSquareQuote
 } from "lucide-react";
 
 const NAV = [
@@ -18,6 +18,7 @@ const NAV = [
   { href: "/admin/trade-in", label: "Thu cũ đổi mới", icon: RefreshCw },
   { href: "/admin/leads", label: "Khách hàng / Leads", icon: Users },
   { href: "/admin/reviews", label: "Đánh giá", icon: Star },
+  { href: "/admin/testimonials", label: "Đánh giá khách hàng", icon: MessageSquareQuote },
   { href: "/admin/coupons", label: "Mã giảm giá", icon: Ticket },
   { href: "/admin/referrals", label: "Giới thiệu", icon: Share2 },
   { href: "/admin/blogs", label: "Bài viết / Blog", icon: FileEdit },

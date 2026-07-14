@@ -25,14 +25,22 @@ const faqs = [
   { q: "Sửa máy có cần đặt lịch không?", a: "Nên đặt lịch để được phục vụ nhanh. Bạn cũng có thể ghé trực tiếp shop." },
 ];
 
+const FALLBACK_TESTIMONIALS = [
+  { id: "f1", customerName: "Minh T.", productName: null as string | null, comment: "Mua iPhone 14 Pro Max cũ, máy đẹp y như mới, pin 100%. Bảo hành rõ ràng.", rating: 5, avatarImage: null as string | null, photoImage: null as string | null },
+  { id: "f2", customerName: "Hoa N.", productName: null as string | null, comment: "Thay pin iPhone 12 trong 40 phút, sạc lại trâu. Anh chủ tư vấn nhiệt tình.", rating: 5, avatarImage: null as string | null, photoImage: null as string | null },
+  { id: "f3", customerName: "Quân L.", productName: null as string | null, comment: "Thu iPhone 11 lên đời 13, giá thu cũ hợp lý, làm thủ tục nhanh.", rating: 5, avatarImage: null as string | null, photoImage: null as string | null },
+];
+
 export default async function HomePage() {
   let products: Awaited<ReturnType<typeof getProducts>> = [];
   let services: Awaited<ReturnType<typeof getServices>> = [];
+  let testimonials: Awaited<ReturnType<typeof getTestimonials>> = [];
   try {
-    [products, services] = await Promise.all([getProducts(), getServices()]);
+    [products, services, testimonials] = await Promise.all([getProducts(), getServices(), getTestimonials()]);
   } catch {
     // DB not ready — render page without dynamic data.
   }
+  const reviews = testimonials.length > 0 ? testimonials : FALLBACK_TESTIMONIALS;
 
   return (
     <>
@@ -129,17 +137,44 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <Section title="Khách hàng nói gì" description="Đánh giá thật từ khách đã mua máy, sửa chữa tại Anh Táo.">
+      <Section title="Khách hàng nói gì" description="Hình ảnh & đánh giá thật từ khách đã mua máy, sửa chữa tại Anh Táo.">
         <div className="grid md:grid-cols-3 gap-4">
-          {[
-            { name: "Minh T.", text: "Mua iPhone 14 Pro Max cũ, máy đẹp y như mới, pin 100%. Bảo hành rõ ràng." },
-            { name: "Hoa N.", text: "Thay pin iPhone 12 trong 40 phút, sạc lại trâu. Anh chủ tư vấn nhiệt tình." },
-            { name: "Quân L.", text: "Thu iPhone 11 lên đời 13, giá thu cũ hợp lý, làm thủ tục nhanh." },
-          ].map((r) => (
-            <div key={r.name} className="surface-card p-4 flex flex-col gap-2">
-              <MessageSquareQuote className="h-5 w-5 text-[var(--brand-accent)]" />
-              <p className="text-sm text-secondary-token flex-1">“{r.text}”</p>
-              <span className="text-sm font-medium">{r.name}</span>
+          {reviews.map((r) => (
+            <div key={r.id} className="surface-card p-4 flex flex-col gap-3">
+              {r.photoImage ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={r.photoImage}
+                  alt={`Khách hàng ${r.customerName}${r.productName ? ` - ${r.productName}` : ""}`}
+                  className="w-full h-48 object-cover rounded-lg"
+                  loading="lazy"
+                />
+              ) : (
+                <MessageSquareQuote className="h-5 w-5 text-[var(--brand-accent)]" />
+              )}
+              <p className="text-sm text-secondary-token flex-1">“{r.comment}”</p>
+              <div className="flex items-center gap-3 pt-1">
+                {r.avatarImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={r.avatarImage}
+                    alt={r.customerName}
+                    className="h-10 w-10 rounded-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="h-10 w-10 rounded-full bg-[var(--brand-primary)] text-white flex items-center justify-center font-semibold">
+                    {r.customerName.trim().charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium">{r.customerName}</span>
+                  <span className="text-xs text-[var(--brand-accent)]">
+                    {"★".repeat(Math.max(1, Math.min(5, r.rating)))}
+                    {r.productName ? ` · ${r.productName}` : ""}
+                  </span>
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -216,6 +251,23 @@ async function getServices(): Promise<ServiceList[]> {
     select: {
       id: true, slug: true, title: true, shortDescription: true,
       serviceGroup: true, priceMin: true, priceMax: true, estimatedTime: true,
+    },
+  });
+}
+
+type TestimonialList = {
+  id: string; customerName: string; productName: string | null;
+  comment: string; rating: number; avatarImage: string | null; photoImage: string | null;
+};
+
+async function getTestimonials(): Promise<TestimonialList[]> {
+  return prisma.testimonial.findMany({
+    where: { status: "published" },
+    orderBy: [{ order: "asc" }, { featured: "desc" }, { createdAt: "desc" }],
+    take: 6,
+    select: {
+      id: true, customerName: true, productName: true,
+      comment: true, rating: true, avatarImage: true, photoImage: true,
     },
   });
 }
