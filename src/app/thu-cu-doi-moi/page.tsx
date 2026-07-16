@@ -1,5 +1,9 @@
 import Link from "next/link";
 import { SeoLanding } from "@/components/SeoLanding";
+import { getPageContent } from "@/lib/page-content";
+
+// Content is editable in the admin panel and stored in the DB.
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Thu cũ đổi mới iPhone — giá tốt, minh bạch",
@@ -13,24 +17,16 @@ const faqs = [
   { q: "Báo giá mất bao lâu?", a: "Sau khi gửi form, shop liên hệ báo giá trong khoảng 30 phút trong giờ làm việc." },
 ];
 
-export default function Page() {
+export default async function Page() {
+  const content = await getPageContent("thu-cu-doi-moi");
+
   return (
     <SeoLanding
-      title="Thu cũ đổi mới tại Anh Táo Mobile"
-      h1="Thu cũ đổi mới — lên đời iPhone mới giá tốt"
-      description="Gửi thông tin máy cũ, Anh Táo Mobile báo giá thu mua minh bạch rồi trừ vào máy mới."
+      title={content.ctaTitle}
+      h1={content.h1}
+      description={content.intro}
       crumbs={[{ href: "/", label: "Trang chủ" }, { href: "/thu-cu-doi-moi", label: "Thu cũ đổi mới" }]}
-      body={
-        <>
-          <p>Lên đời iPhone mới chưa bao giờ dễ hơn. Anh Táo Mobile hỗ trợ thu mua máy cũ — iPhone, iPad, MacBook — với quy trình rõ ràng:</p>
-          <ul>
-            <li>Bạn gửi thông tin máy qua form</li>
-            <li>Shop báo giá thu cũ trong 30 phút</li>
-            <li>Đồng ý → mang máy tới shop kiểm tra nhanh, trừ tiền vào máy mới</li>
-          </ul>
-          <p>Máy được kiểm tra công khai, báo giá thật — không ép giá, không nói quá.</p>
-        </>
-      }
+      body={<div dangerouslySetInnerHTML={{ __html: content.bodyHtml }} />}
       faqs={faqs}
       ctaHref="/gui-may-thu-cu"
       ctaLabel="Gửi máy thu cũ"
