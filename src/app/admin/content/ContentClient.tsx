@@ -6,7 +6,7 @@ import {
   PAGE_CONTENT_LABELS,
   type PageContent,
   type PageContentKey,
-} from "@/lib/page-content";
+} from "@/lib/page-content-schema";
 
 const PAGE_PATHS: Record<PageContentKey, string> = {
   "bao-hanh": "/bao-hanh",
