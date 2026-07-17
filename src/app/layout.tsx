@@ -35,8 +35,27 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     type: "website",
+    locale: "vi_VN",
     siteName: env.NEXT_PUBLIC_SITE_NAME,
     url: env.NEXT_PUBLIC_SITE_URL,
+    title: `${env.NEXT_PUBLIC_SITE_NAME} — iPhone cũ, máy đẹp, bảo hành rõ ràng`,
+    description:
+      "Chuyên iPhone, iPad, MacBook, smartphone cũ/mới và sửa chữa thay linh kiện lấy liền tại Bình Dương.",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: `${env.NEXT_PUBLIC_SITE_NAME} — iPhone cũ, máy đẹp, bảo hành rõ ràng`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${env.NEXT_PUBLIC_SITE_NAME} — iPhone cũ, máy đẹp, bảo hành rõ ràng`,
+    description:
+      "Chuyên iPhone, iPad, MacBook, smartphone cũ/mới và sửa chữa thay linh kiện lấy liền tại Bình Dương.",
+    images: ["/opengraph-image"],
   },
   alternates: { canonical: "/" },
   robots: { index: true, follow: true },
@@ -85,6 +104,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             email: env.NEXT_PUBLIC_CONTACT_EMAIL,
             telephone: env.NEXT_PUBLIC_HOTLINE,
             image: `${env.NEXT_PUBLIC_SITE_URL}/opengraph-image`,
+            logo: `${env.NEXT_PUBLIC_SITE_URL}/apple-icon`,
             priceRange: "1.000.000₫ - 30.000.000₫",
             description: "Chuyên iPhone, iPad, MacBook cũ/mới và sửa chữa thay linh kiện lấy liền tại Bình Dương. BH pin 60 tháng, main 12 tháng 1 đổi 1.",
             address: {

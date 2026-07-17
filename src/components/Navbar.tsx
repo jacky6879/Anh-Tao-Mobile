@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ShoppingCart } from "lucide-react";
 import { env } from "@/lib/env";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -24,10 +25,15 @@ export async function Navbar() {
         <div className="flex h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <MobileMenu links={links} />
-            <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--brand-primary)] text-white">
-                AT
-              </span>
+            <Link href="/" className="flex items-center gap-2 font-bold text-lg" aria-label={env.NEXT_PUBLIC_SITE_NAME}>
+              <Image
+                src="/logo.png"
+                alt={env.NEXT_PUBLIC_SITE_NAME}
+                width={36}
+                height={36}
+                priority
+                className="h-9 w-9 rounded-lg object-contain"
+              />
               <span className="hidden sm:inline">{env.NEXT_PUBLIC_SITE_NAME}</span>
             </Link>
           </div>
