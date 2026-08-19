@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { saveBlog } from "../actions";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { BlogBodyEditor } from "@/components/admin/BlogBodyEditor";
 
 export function BlogForm({ initialData, id }: { initialData: any; id: string }) {
   const [isPending, startTransition] = useTransition();
@@ -72,12 +73,10 @@ export function BlogForm({ initialData, id }: { initialData: any; id: string }) 
 
       <div>
         <label className="text-sm font-medium mb-1 block">Nội dung HTML <span className="text-red-500">*</span></label>
-        <p className="text-xs text-[var(--text-muted)] mb-2">Hỗ trợ viết bằng mã HTML trực tiếp.</p>
-        <textarea 
-          required
-          className="input min-h-[300px] font-mono text-sm" 
-          value={data.body || ""} 
-          onChange={(e) => setData({ ...data, body: e.target.value })} 
+        <p className="text-xs text-[var(--text-muted)] mb-2">Hỗ trợ viết bằng mã HTML trực tiếp. Dùng công cụ bên dưới để tải ảnh / chọn ảnh từ thư viện và chèn vào giữa bài viết tại vị trí con trỏ.</p>
+        <BlogBodyEditor
+          value={data.body || ""}
+          onChange={(body) => setData({ ...data, body })}
         />
       </div>
 
