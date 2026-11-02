@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 const SITE_URL = "https://anhtaomobile.com";
 
 const STATIC = [
-  "", "san-pham", "sua-chua", "thu-cu-doi-moi", "tra-gop", "bao-hanh",
+  "", "san-pham", "sua-chua", "thu-cu-doi-moi", "promptkichban", "tra-gop", "bao-hanh",
   "lien-he", "dat-lich-sua-chua", "gui-may-thu-cu", "thay-pin-iphone",
   "thay-man-hinh-iphone", "ep-kinh-iphone", "iphone-cu", "iphone-moi",
   "ipad", "macbook", "privacy", "terms", "refund-policy", "warranty-policy",
