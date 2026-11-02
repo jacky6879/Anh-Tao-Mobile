@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SeoLanding } from "@/components/SeoLanding";
+import { PromptTool } from "@/components/PromptTool";
 
 export const metadata = {
   title: "Prompt tạo kịch bản video bán iPhone cho Veo 3, Grok, Seedance",
@@ -46,6 +47,7 @@ export default function Page() {
       ]}
       body={
         <div>
+          <PromptTool />
           <h2>Cấu trúc kịch bản video short 30 giây</h2>
           <p>
             Một video bán iPhone hiệu quả thường đi đúng 3 nhịp: gây chú ý,
