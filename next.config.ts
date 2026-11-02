@@ -5,11 +5,11 @@ const isDev = process.env.NODE_ENV !== "production";
 
 const csp = [
   "default-src 'self'",
-  "img-src 'self' https://*.supabase.co data: blob:",
+  "img-src 'self' https://*.supabase.co https://res.cloudinary.com data: blob:",
   `script-src 'self' 'unsafe-inline' ${isDev ? "'unsafe-eval'" : ""} https://www.googletagmanager.com https://va.vercel-scripts.com`,
   "style-src 'self' 'unsafe-inline'",
   "frame-src https://www.youtube-nocookie.com https://drive.google.com https://www.google.com",
-  "connect-src 'self' https://*.supabase.co https://*.ingest.sentry.io",
+  "connect-src 'self' https://*.supabase.co https://api.cloudinary.com https://*.ingest.sentry.io",
   "font-src 'self' data:",
   "object-src 'none'",
   "base-uri 'self'",
@@ -37,6 +37,16 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/toan",
+        destination: "/toancap1",
+        permanent: true,
+      },
+      {
+        source: "/toan/:path*",
+        destination: "/toancap1/:path*",
+        permanent: true,
+      },
+      {
         source: "/:path*",
         has: [{ type: "host", value: "www.anhtaomobile.com" }],
         destination: "https://anhtaomobile.com/:path*",
@@ -47,6 +57,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: supabaseHost },
+      { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
