@@ -60,11 +60,13 @@ function splitDuration(total: number): [number, number, number] {
 
 export function PromptTool() {
   const [topic, setTopic] = useState("");
-  const [type, setType] = useState(TYPES[3]);
-  const [model, setModel] = useState(MODELS[0]);
+  const [type, setType] = useState<string>(TYPES[3] ?? "Bán hàng / chốt đơn");
+  const [model, setModel] = useState<string>(MODELS[0] ?? "Veo 3");
   const [aspect, setAspect] = useState("9:16");
   const [duration, setDuration] = useState(30);
-  const [tone, setTone] = useState(TONES[2]);
+  const [tone, setTone] = useState<string>(
+    TONES[2] ?? "Thân thiện, gần gũi"
+  );
   const [customTone, setCustomTone] = useState("");
   const [extra, setExtra] = useState("");
   const [shop, setShop] = useState("Anh Táo Mobile");
