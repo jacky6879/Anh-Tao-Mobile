@@ -54,6 +54,18 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return [
+      {
+        source: "/toancap1",
+        destination: "/toancap1/index.html",
+      },
+      {
+        source: "/toancap2",
+        destination: "/toancap2/index.html",
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: supabaseHost },
